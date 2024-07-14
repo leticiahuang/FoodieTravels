@@ -8,7 +8,7 @@ class Countries(models.Model):
     def __str__(self):
         return f"{self.countryName}"
     
-class User(models.Model):
+class Users(models.Model):
     name = models.CharField(max_length=100)
     countriesSelected = models.ManyToManyField(Countries)
 
