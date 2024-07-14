@@ -13,9 +13,6 @@ from django.contrib import messages
 logger = logging.getLogger(__name__)
 
 def index(request):
-    '''if request.user.is_authenticated:
-        return render(request, "getFoods/planTrip.html")
-    else:'''
     return HttpResponseRedirect(reverse('getFoods:login'))
 
 
@@ -30,7 +27,8 @@ def login_view(request):
         #if user exists, login
         if user: 
             login(request, user)
-            return render(request, "getFoods/planTrip.html", {'username':username})
+            return HttpResponseRedirect(reverse('getFoods:planTrip', kwargs={'username':username}))
+            #return render(request, "getFoods/planTrip.html", {'username':username})
 
         else:
             return render(request, "getFoods/login.html", {'message' : "Wrong username or password."})
@@ -43,14 +41,14 @@ def logout_view(request):
     return render(request, "getFoods/login.html", {'message': "Logged out."})
 
 def planTrip(request, username):
-    user = Users.objects.get(pk=username)
+    user = Users.objects.get(name=username)
     
     #if new country submitted, add
     if request.method == "POST":
         user.countriesSelected.add(request.POST['newCountry'])
         
 
-    return render(request, "getFoods/planTrip.html")
+    return render(request, "getFoods/planTrip.html", {'username':username.capitalize()})
     '''
     form = NewRequest()
     return render(request, "getFoods/planTrip.html", {"form": form})
