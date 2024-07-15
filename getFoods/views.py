@@ -13,7 +13,7 @@ from django.contrib import messages
 logger = logging.getLogger(__name__)
 
 def index(request):
-    return HttpResponseRedirect(reverse('getFoods:login'))
+    return HttpResponseRedirect(reverse('getFoods : login'))
 
 
 def login_view(request):
@@ -26,9 +26,9 @@ def login_view(request):
 
         #if user exists, login
         if user: 
+            request.session['username'] = username
             login(request, user)
-            return HttpResponseRedirect(reverse('getFoods:planTrip', kwargs={'username':username}))
-            #return render(request, "getFoods/planTrip.html", {'username':username})
+            return HttpResponseRedirect(reverse('getFoods:planTrip', args=(username)))
 
         else:
             return render(request, "getFoods/login.html", {'message' : "Wrong username or password."})
@@ -38,17 +38,29 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    return render(request, "getFoods/login.html", {'message': "Logged out."})
+    try:
+        del request.session['username']
+    except KeyError:
+        pass
+    return render(request, "getFoods/login.html", {'message' : "Logged out."})
 
 def planTrip(request, username):
-    user = Users.objects.get(name=username)
+    user = Users.objects.get(name = username)
+    countriesSelected = user.countriesSelected.all()
+    countriesNotSelected = Countries.objects.raw("SELECT * FROM getFoods_countries WHERE NOT EXISTS (select countries_id from getFoods_users_countriesSelected WHERE getFoods_countries.id=getFoods_users_countriesSelected.countries_id)")
     
     #if new country submitted, add
     if request.method == "POST":
-        user.countriesSelected.add(request.POST['newCountry'])
+        country_id = int(request.POST['newCountry'])
+        country = Countries.objects.get(pk = country_id)
+        user.countriesSelected.add(country)
         
 
-    return render(request, "getFoods/planTrip.html", {'username':username.capitalize()})
+    return render(request, "getFoods/planTrip.html", {
+        'user' : user, 
+        'countriesSelected' : countriesSelected,
+        'countriesNotSelected' : countriesNotSelected
+        })
     '''
     form = NewRequest()
     return render(request, "getFoods/planTrip.html", {"form": form})

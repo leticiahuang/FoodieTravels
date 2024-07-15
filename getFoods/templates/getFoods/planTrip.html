@@ -7,29 +7,27 @@
         <h1>{{ username }}'s Food Tour!</h1>
         <p>How it works: Select the countries you will be travelling to and add them to the list below. Press submit and enjoy a guide for local cuisines to try on your trip!</p>
 
-        <!-- form to submit trip -->
-        <form method="post" action="{%url 'itinerary', username}">
-
-            <!-- form to add new country -->
-             <!-- NOTE: can add username as argument to 'action', will allow access to user info through pk (if we want to resume previous session)-->
-            <form method="post" action="{%url 'planTrip', username}">
-                {% csrf_token %}
-                <label for="addCountry">Next Country:</label>
-                <input type="text" name="newCountry"/>
-                <br>
-                <button type="submit">Add</button>
-                <p>Current countries selected:</p>
-                <ul>
-                    {% for country in selectedCountries %}
-                        <li>{{ country.countryName}}</li>
-                    {% endfor %}
-                </ul>
-            </form>
-
+        <!-- # means stay on same page -->
+        <form method="post" action="#">
+            {% csrf_token %}
+            <label for="addCountry">Next Country:</label>
+            <select name="country">
+                {% for country in countriesNotSelected %}
+                    <option value="{{ country }}">{{ country }}</option>
+                {% endfor %}
+            </select>
+            <br>
+            <button type="submit">Add</button>
+            <p>Current countries selected:</p>
+            <ul>
+                {% for country in countriesSelected %}
+                    <li>{{ country.countryName}}</li>
+                {% endfor %}
+            </ul>
             <input type="checkbox">
             <label for="exampleCheck">I want to receive a copy of this guide in my email.</label>
             <br>
-            <button type="submit">Get Your Tour</button>
+            <button type="submit" formaction="{%url 'itinerary' username'}">Get Your Tour</button>
             <br>
         </form>
         <a href="{% url 'getFoods:logout' %}">Log Out</a>
