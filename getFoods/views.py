@@ -51,8 +51,9 @@ def planTrip(request):
     
     #if new country submitted, add
     if request.method == "POST":
-        country_id = int(request.POST['newCountry'])
-        country = Countries.objects.get(pk = country_id)
+        country = Countries.objects.get(countryName = request.POST['newCountry'])
+        if (countty not found)
+        
         #add if country exists:
         user.countriesSelected.add(country)
 

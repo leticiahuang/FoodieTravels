@@ -13,7 +13,7 @@
             <label for="addCountry">Next Country:</label>
             <select name="newCountry">
                 {% for country in countriesNotSelected %}
-                    <option value="newCountry">{{ country }}</option>
+                    <option value="{{ country }}">{{ country }}</option>
                 {% endfor %}
             </select>
             <br>
