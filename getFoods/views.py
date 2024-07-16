@@ -13,7 +13,7 @@ from django.contrib import messages
 logger = logging.getLogger(__name__)
 
 def index(request):
-    return HttpResponseRedirect(reverse('getFoods : login'))
+    return HttpResponseRedirect(reverse('getFoods:login'))
 
 
 def login_view(request):
@@ -28,7 +28,7 @@ def login_view(request):
         if user: 
             request.session['username'] = username
             login(request, user)
-            return HttpResponseRedirect(reverse('getFoods:planTrip', args=(username)))
+            return HttpResponseRedirect(reverse('getFoods:planTrip', kwargs={'username':username}))
 
         else:
             return render(request, "getFoods/login.html", {'message' : "Wrong username or password."})
@@ -53,26 +53,14 @@ def planTrip(request, username):
     if request.method == "POST":
         country_id = int(request.POST['newCountry'])
         country = Countries.objects.get(pk = country_id)
+        #add if country exists:
         user.countriesSelected.add(country)
-        
 
     return render(request, "getFoods/planTrip.html", {
         'user' : user, 
         'countriesSelected' : countriesSelected,
         'countriesNotSelected' : countriesNotSelected
         })
-    '''
-    form = NewRequest()
-    return render(request, "getFoods/planTrip.html", {"form": form})
 
-
-
-    username = request.POST['username']
-
-        logger.info("received name=", username)
-
-        user = Users(name=username)  
-        user.save()
-
-        # What you want to render
-    '''
+def itinerary(request):
+    return HttpResponse("Hello, world!")
