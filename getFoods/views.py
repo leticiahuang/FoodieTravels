@@ -28,7 +28,7 @@ def login_view(request):
         if user: 
             request.session['username'] = username
             login(request, user)
-            return HttpResponseRedirect(reverse('getFoods:planTrip', kwargs={'username':username}))
+            return HttpResponseRedirect(reverse('getFoods:planTrip'))
 
         else:
             return render(request, "getFoods/login.html", {'message' : "Wrong username or password."})
@@ -44,8 +44,8 @@ def logout_view(request):
         pass
     return render(request, "getFoods/login.html", {'message' : "Logged out."})
 
-def planTrip(request, username):
-    user = Users.objects.get(name = username)
+def planTrip(request):
+    user = Users.objects.get(username=request.session['username'])
     countriesSelected = user.countriesSelected.all()
     countriesNotSelected = Countries.objects.raw("SELECT * FROM getFoods_countries WHERE NOT EXISTS (select countries_id from getFoods_users_countriesSelected WHERE getFoods_countries.id=getFoods_users_countriesSelected.countries_id)")
     
