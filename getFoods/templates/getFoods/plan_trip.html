@@ -11,8 +11,8 @@
         <form method="post" action='#'>
             {% csrf_token %}
             <label for="addCountry">Next Country:</label>
-            <select name="newCountry">
-                {% for country in countriesNotSelected %}
+            <select id="addCountry">
+                {% for country in countries_not_selected %}
                     <option value="{{ country }}">{{ country }}</option>
                 {% endfor %}
             </select>
@@ -20,8 +20,8 @@
             <button type="submit">Add</button>
             <p>Current countries selected:</p>
             <ul>
-                {% for country in countriesSelected %}
-                    <li>{{ country.countryName}} <button>delete</button></li>
+                {% for country in countries_selected %}
+                    <li>{{ country.country_name}} <button type="submit" name ="deleteCountry" value="{{ country }}">delete</button></li>
                 {% endfor %}
             </ul>
             <input type="checkbox">

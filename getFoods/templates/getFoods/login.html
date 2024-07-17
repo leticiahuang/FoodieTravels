@@ -11,12 +11,14 @@
                 <form method="post" action="{% url 'getFoods:login' %}">
                     {% csrf_token %}
                     <label for="username">Name:</label>
-                    <input type="text" name="username" placeholders/>
+                    <input type="text" value="username" name="username"/>
                     <br>
                     <label for="password">Password:</label>
-                    <input type="password" name="password"/>
+                    <input type="password" value="password"/>
                     <br>
                     <input type="submit" value="Submit">
             </form>
+            <p>New to this page? Create an account:</p>
+            <a href="{% url 'getFoods:register' %}">Registration</a>
         </body>
     </html>
