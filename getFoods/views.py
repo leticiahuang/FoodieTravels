@@ -29,8 +29,7 @@ def register(request):
             username = request.POST['username']
             Users(username = username).save()
             user = Users.objects.get(username = username)
-            new_country_list = Countries()
-            user.add(new_country_list)
+            user.countries_not_selected.add(*Countries.objects.all())
             messages.success(request, "Account created.")
             return HttpResponseRedirect(reverse('getFoods:login'))
 
@@ -57,8 +56,6 @@ def login_view(request):
         if user: 
             login(request, user)
             request.session['my_username'] = username
-            request.session['countries_selected'] = user.countries_selected.all()
-            request.session['countries_not_selected'] = Countries.objects.raw("SELECT * FROM getFoods_countries WHERE NOT EXISTS (select countries_id from getFoods_users_countries_selected WHERE getFoods_countries.id=getFoods_users_countries_selected.countries_id)")
             return HttpResponseRedirect(reverse('getFoods:plan_trip'))
 
         else:
@@ -76,20 +73,28 @@ def logout_view(request):
     return render(request, "getFoods/login.html", {'message' : "Logged out."})
 
 def plan_trip(request):
-    my_username = request.session.get('my_username') 
-    user = Users.objects.get(username=my_username)
+    user = Users.objects.get(username = request.session.get('my_username'))
     
     #if new country submitted, add
     if request.method == "POST":
-        addCountry = request.POST.get('addCountry')
-        deleteCountry = request.POST.get('deleteCountry')
+        add_country = Countries.objects.get(country_name = request.POST['addCountry'])
 
-        if addCountry:
-            request.session['countries_selected'] = user.countries_selected.add(Countries.objects.get(country_name = addCountry))
-        if deleteCountry:
-            request.session['countries_not_selected'] = user.countries_selected.delete(Countries.objects.get(country_name = deleteCountry))
+        if add_country:
+            user.countries_selected.add(add_country)
+            user.countries_not_selected.remove(add_country)
     
-    return render(request, "getFoods/plan_trip.html")
+    return render(request, "getFoods/plan_trip.html",{
+        'username' : user.username, 
+        'countries_selected' : user.countries_selected,
+        'countries_not_selected' : user.countries_not_selected
+        })
 
 def itinerary(request):
     return HttpResponse("Hello, world!")
+
+def delete(request, id):
+    user = Users.objects.get(username = request.session.get('my_username') )
+    country = Countries.objects.get(id = id)
+    user.countries_selected.remove(country)
+    user.countries_not_selected.add(country)
+    return HttpResponseRedirect(reverse('getFoods:plan_trip'))

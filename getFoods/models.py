@@ -12,6 +12,7 @@ class Users(models.Model):
     username = models.CharField(max_length=100)
     countries_selected = models.ManyToManyField(Countries, blank=True, related_name="visitors")
     #blank means users can have no countriesSelected, and can access users through Countries.visitors
+    countries_not_selected = models.ManyToManyField(Countries, blank=True, related_name="non_visitors")
 
     def __str__(self):
         return f"{self.username}"

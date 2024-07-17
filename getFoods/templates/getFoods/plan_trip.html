@@ -4,24 +4,26 @@
         <title>World Food Tour!</title>
     </head>
     <body>
-        <h1>{{ user.username }}'s Food Tour!</h1>
+        <h1>{{ username }}'s Food Tour!</h1>
         <p>How it works: Select the countries you will be travelling to and add them to the list below. Press submit and enjoy a guide for local cuisines to try on your trip!</p>
 
         <!-- # means stay on same page -->
-        <form method="post" action='#'>
+        <form method="post" action=''>
             {% csrf_token %}
             <label for="addCountry">Next Country:</label>
-            <select id="addCountry">
-                {% for country in countries_not_selected %}
-                    <option value="{{ country }}">{{ country }}</option>
+            <select name="addCountry">
+                {% for new_country in countries_not_selected.all %}
+                    <option value="{{ new_country }}">{{ new_country }}</option>
                 {% endfor %}
             </select>
             <br>
             <button type="submit">Add</button>
             <p>Current countries selected:</p>
             <ul>
-                {% for country in countries_selected %}
-                    <li>{{ country.country_name}} <button type="submit" name ="deleteCountry" value="{{ country }}">delete</button></li>
+                {% for country in countries_selected.all %}
+                    <li>{{ country.country_name}} 
+                    <a href="delete/{{country.id}}">Delete</a>
+                    <!-- <button type="submit" name ="deleteCountry" value="{{ country }}">delete</button></li> -->
                 {% endfor %}
             </ul>
             <input type="checkbox">
