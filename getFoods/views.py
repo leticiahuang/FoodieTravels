@@ -26,11 +26,8 @@ def register(request):
             user = form.save() 
 
             #create user for Users model
-            #TODO: maybe use request.POST['username'] to access user name or create and use meta fields? Problem is
-            #when user is created, it doesn't get added to Users model
             new_country_list = Countries()
             Users(username = request.POST['username']).save()
-            #(Users(request.POST['username'], Countries())).save()
             messages.success(request, "Account created.")
             return HttpResponseRedirect(reverse('getFoods:login'))
 
