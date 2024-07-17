@@ -47,19 +47,13 @@ def login_view(request):
         #VALIDATE DATA
         username = request.POST['username']
         password = request.POST['password']
-        request.session['username'] = username
-        request.session['password'] = password
 
         user = authenticate(request, username = username, password = password)
 
         #if user exists, login
         if user: 
-            if request.session.test_cookie_worked():
-                request.session.delete_test_cookie()
-                return HttpResponse("You're logged in.")
-            else:
-                return HttpResponse("Please enable cookies and try again.")
             login(request, user)
+            request.session['my_username'] = username
             return HttpResponseRedirect(reverse('getFoods:plan_trip'))
 
         else:
@@ -77,7 +71,8 @@ def logout_view(request):
     return render(request, "getFoods/login.html", {'message' : "Logged out."})
 
 def plan_trip(request):
-    user = Users.objects.get(username='leticia')
+    my_username = request.session.get('my_username') 
+    user = Users.objects.get(username=my_username)
     countries_selected = user.countries_selected.all()
     countries_not_selected = Countries.objects.raw("SELECT * FROM getFoods_countries WHERE NOT EXISTS (select countries_id from getFoods_users_countries_selected WHERE getFoods_countries.id=getFoods_users_countries_selected.countries_id)")
     
