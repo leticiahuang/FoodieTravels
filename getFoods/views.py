@@ -23,11 +23,14 @@ def register(request):
         #if valid, create user and redirect to login 
         if form.is_valid():
             #creates user for django admin
-            user = form.save() 
+            form.save() 
 
             #create user for Users model
+            username = request.POST['username']
+            Users(username = username).save()
+            user = Users.objects.get(username = username)
             new_country_list = Countries()
-            Users(username = request.POST['username']).save()
+            user.add(new_country_list)
             messages.success(request, "Account created.")
             return HttpResponseRedirect(reverse('getFoods:login'))
 
@@ -54,6 +57,8 @@ def login_view(request):
         if user: 
             login(request, user)
             request.session['my_username'] = username
+            request.session['countries_selected'] = user.countries_selected.all()
+            request.session['countries_not_selected'] = Countries.objects.raw("SELECT * FROM getFoods_countries WHERE NOT EXISTS (select countries_id from getFoods_users_countries_selected WHERE getFoods_countries.id=getFoods_users_countries_selected.countries_id)")
             return HttpResponseRedirect(reverse('getFoods:plan_trip'))
 
         else:
@@ -73,26 +78,18 @@ def logout_view(request):
 def plan_trip(request):
     my_username = request.session.get('my_username') 
     user = Users.objects.get(username=my_username)
-    countries_selected = user.countries_selected.all()
-    countries_not_selected = Countries.objects.raw("SELECT * FROM getFoods_countries WHERE NOT EXISTS (select countries_id from getFoods_users_countries_selected WHERE getFoods_countries.id=getFoods_users_countries_selected.countries_id)")
     
     #if new country submitted, add
     if request.method == "POST":
-        form = CustomUserCreationForm(request.POST)
-        if form.is_valid():
-            addCountry = form.cleaned_data['addCountry']
-            deleteCountry = form.cleaned_data['deleteCountry']
+        addCountry = request.POST.get('addCountry')
+        deleteCountry = request.POST.get('deleteCountry')
 
         if addCountry:
-            countries_selected.add(Countries.objects.get(country_name = addCountry))
+            request.session['countries_selected'] = user.countries_selected.add(Countries.objects.get(country_name = addCountry))
         if deleteCountry:
-            countries_selected.delete(Countries.objects.get(country_name = deleteCountry))
+            request.session['countries_not_selected'] = user.countries_selected.delete(Countries.objects.get(country_name = deleteCountry))
     
-    return render(request, "getFoods/plan_trip.html", {
-        'user' : user, 
-        'countries_selected' : countries_selected,
-        'countries_not_selected' : countries_not_selected
-        })
+    return render(request, "getFoods/plan_trip.html")
 
 def itinerary(request):
     return HttpResponse("Hello, world!")
