@@ -7,6 +7,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm  
 from .forms import RegisterForm  
+from cities_light.models import Country, City
+
 
 
 # Create your views here.
@@ -82,8 +84,11 @@ def plan_trip(request):
         if add_country:
             user.countries_selected.add(add_country)
             user.countries_not_selected.remove(add_country)
-    
-    return render(request, "getFoods/plan_trip.html",{
+
+    all_cities = City.objects.filter(country__name='Canada')
+    print("CITIES = %s", all_cities)
+
+    return render(request, "getFoods/plan_trip.html", {
         'username' : user.username, 
         'countries_selected' : user.countries_selected,
         'countries_not_selected' : user.countries_not_selected
@@ -93,7 +98,7 @@ def itinerary(request):
     return HttpResponse("Hello, world!")
 
 def delete(request, id):
-    user = Users.objects.get(username = request.session.get('my_username') )
+    user = Users.objects.get(username = request.session.get('my_username'))
     country = Countries.objects.get(id = id)
     user.countries_selected.remove(country)
     user.countries_not_selected.add(country)
