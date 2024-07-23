@@ -12,4 +12,5 @@ urlpatterns = [
     path("itinerary", views.itinerary, name="itinerary"),
     path("register", views.register, name="register"),
     path('delete/<int:id>', views.delete, name='delete'),
+    path('get_cities/<str:country>', views.get_cities, name='get_cities'),
 ]

@@ -2,33 +2,74 @@
 <html lang="en">
     <head>
         <title>World Food Tour!</title>
+        <script>
+            //js for filtering cities suggested based on country selected. only runs when page loaded and country selected
+            document.addEventListener('DOMContentLoaded', function(){
+                document.getElementById("add-country").addEventListener("change", function() {
+                const country = document.querySelector('#add-country').value;
+                fetch(`/getFoods/get_cities/${country}`)
+                .then((response) => response.json())
+                //data is variable, stores result from response.json()
+                .then(data => {
+                    innerHtml = '<option value="">Select city...</option>';
+                    //iterate over every JSON object to filter the city name and add as select value
+                    for (let i = 0; i < data.length; i++) {
+                        let cityObject = data[i];
+                        cityName = cityObject['fields']['name'];
+                        innerHtml += "<option value=" + cityName + ">" +cityName+ "</option>";
+                    }
+                    document.querySelector('#add-city').innerHTML = innerHtml;
+                })
+            })
+        });
+        </script>
     </head>
     <body>
-        <h1>{{ username }}'s Food Tour!</h1>
+        <h1>{{ user.username.capitalize }}'s Food Tour!</h1>
         <p>How it works: Select the countries you will be travelling to and add them to the list below. Press submit and enjoy a guide for local cuisines to try on your trip!</p>
 
-        <!-- # means stay on same page -->
+        <!-- '' means go to same page -->
         <form method="post" action=''>
             {% csrf_token %}
-            <label for="addCountry">Next Country:</label>
-            <select name="addCountry">
-                {% for new_country in countries_not_selected.all %}
+            <label for="add-country">Next Destination:</label>
+            <!-- TODO: understand difference bw name/id -->
+
+
+             <!-- select element for country -->
+            <select name="add-country" id="add-country" required>
+                <option value="">Select country...</option>
+                {% for new_country in countries %}
                     <option value="{{ new_country }}">{{ new_country }}</option>
                 {% endfor %}
             </select>
+
+
+            <!-- select element for city -->
+            <select name="add-city" id="add-city" required>
+                <option value="">Select city...</option>
+                <!-- don't need other options, js innerHtml will fill items -->
+            </select>
             <br>
             <button type="submit">Add</button>
-            <p>Current countries selected:</p>
+
+
+            <!-- list current destinations chosen with option to delete -->
+            <p>Current destinations selected:</p>
             <ul>
-                {% for country in countries_selected.all %}
-                    <li>{{ country.country_name}} 
-                    <a href="delete/{{country.id}}">Delete</a>
-                    <!-- <button type="submit" name ="deleteCountry" value="{{ country }}">delete</button></li> -->
+                {% for destination in user.destinations.all %}
+                    <li>{{ destination.city.name }}, {{ destination.country.name }} 
+                    <a href="delete/{{destination.id}}">Delete</a>
                 {% endfor %}
             </ul>
+
+
+            <!-- email subscription option -->
             <input type="checkbox">
             <label for="exampleCheck">I want to receive a copy of this guide in my email.</label>
             <br>
+
+
+            <!-- submit or logout -->
             <button type="submit" formaction="{% url 'getFoods:itinerary'%}">Get Your Tour</button>
             <br>
         </form>

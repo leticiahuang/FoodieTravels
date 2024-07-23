@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-from .models import Users, Countries
+from .models import Users, Destinations
 import logging
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
@@ -8,7 +8,8 @@ from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm  
 from .forms import RegisterForm  
 from cities_light.models import Country, City
-
+from django.http import JsonResponse
+from django.core.serializers import serialize
 
 
 # Create your views here.
@@ -31,7 +32,6 @@ def register(request):
             username = request.POST['username']
             Users(username = username).save()
             user = Users.objects.get(username = username)
-            user.countries_not_selected.add(*Countries.objects.all())
             messages.success(request, "Account created.")
             return HttpResponseRedirect(reverse('getFoods:login'))
 
@@ -57,6 +57,7 @@ def login_view(request):
         #if user exists, login
         if user: 
             login(request, user)
+            #set session cookie
             request.session['my_username'] = username
             return HttpResponseRedirect(reverse('getFoods:plan_trip'))
 
@@ -79,27 +80,35 @@ def plan_trip(request):
     
     #if new country submitted, add
     if request.method == "POST":
-        add_country = Countries.objects.get(country_name = request.POST['addCountry'])
+        dest_country = Country.objects.get(name = request.POST['add-country'])
+        dest_city = City.objects.get(name = request.POST['add-city'])
 
-        if add_country:
-            user.countries_selected.add(add_country)
-            user.countries_not_selected.remove(add_country)
-
-    all_cities = City.objects.filter(country__name='Canada')
-    print("CITIES = %s", all_cities)
+        new_dest = Destinations.objects.get(country = dest_country, city = dest_city)
+        #don't need to check if new_dest already in user.destination, django doesn't allow
+        user.destinations.add(new_dest)
 
     return render(request, "getFoods/plan_trip.html", {
-        'username' : user.username, 
-        'countries_selected' : user.countries_selected,
-        'countries_not_selected' : user.countries_not_selected
+        'user' : user,
+        'countries' : Country.objects.all(),
+        'cities' : City.objects.all(),
         })
 
 def itinerary(request):
     return HttpResponse("Hello, world!")
 
 def delete(request, id):
+    #this view used to delete a destination from user.destinations
     user = Users.objects.get(username = request.session.get('my_username'))
-    country = Countries.objects.get(id = id)
-    user.countries_selected.remove(country)
-    user.countries_not_selected.add(country)
+    destination = Destinations.objects.get(id = id)
+    user.destinations.remove(destination)
     return HttpResponseRedirect(reverse('getFoods:plan_trip'))
+
+def get_cities(request, country):
+    #this view used to filter cities depending on country chosen
+    query_results = City.objects.filter(country__name = country)
+    #fields specify which fields of the model to return
+    #serialize creates json object, don't need to return JsonResponse or will be changed twice
+    json_object = serialize("json", query_results, fields=['name']) 
+    return HttpResponse(json_object, content_type="application/json")
+
+
