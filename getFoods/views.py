@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-from .models import Users, Destinations
+from .models import Users
 import logging
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
@@ -80,10 +80,7 @@ def plan_trip(request):
     
     #if new country submitted, add
     if request.method == "POST":
-        dest_country = Country.objects.get(name = request.POST['add-country'])
-        dest_city = City.objects.get(name = request.POST['add-city'])
-
-        new_dest = Destinations.objects.get(country = dest_country, city = dest_city)
+        new_dest = City.objects.get(name = request.POST['add-city'])
         #don't need to check if new_dest already in user.destination, django doesn't allow
         user.destinations.add(new_dest)
 
@@ -99,7 +96,7 @@ def itinerary(request):
 def delete(request, id):
     #this view used to delete a destination from user.destinations
     user = Users.objects.get(username = request.session.get('my_username'))
-    destination = Destinations.objects.get(id = id)
+    destination = user.destinations.get(id = id)
     user.destinations.remove(destination)
     return HttpResponseRedirect(reverse('getFoods:plan_trip'))
 
