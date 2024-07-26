@@ -148,3 +148,4 @@ def get_top_foods(request):
     json_object = json.dumps(all_dest, indent=4)
     logger.info("----- JSON: %s", json_object)
     return JsonResponse(json_object, content_type="application/json")
+    
