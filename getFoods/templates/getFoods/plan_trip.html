@@ -16,7 +16,7 @@
                     for (let i = 0; i < data.length; i++) {
                         let cityObject = data[i];
                         cityName = cityObject['fields']['name'];
-                        innerHtml += "<option value=" + cityName + ">" +cityName+ "</option>";
+                        innerHtml += "<option value=" + cityName + ">" + cityName + "</option>";
                     }
                     document.querySelector('#add-city').innerHTML = innerHtml;
                 })
@@ -67,12 +67,13 @@
             <input type="checkbox">
             <label for="exampleCheck">I want to receive a copy of this guide in my email.</label>
             <br>
-
-
-            <!-- submit or logout -->
-            <button type="submit" formaction="{% url 'getFoods:itinerary'%}">Get Your Tour</button>
-            <br>
         </form>
+
+        <!-- submit or logout -->
+        <a href="{% url 'getFoods:itinerary'%}">
+            <button>Get Your Tour</button>
+        </a>
+        <br>
         <a href="{% url 'getFoods:logout' %}">Log Out</a>
     </body>
 </html>

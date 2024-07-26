@@ -2,8 +2,17 @@
 <html lang="en">
     <head>
         <title>World Food Tour!</title>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&loading=async&libraries=maps,marker&v=beta"
+                fetch(`/getFoods/get_top_foods`)
+            });
+        </script>
     </head>
     <body>
-        <!-- CHANGE EVERYTHING TO ACCESS USER INFO THROUGH COOKIE SESSION, NO MORE PASSING USERNAME AS PARAMETER -->
+        <h1>Your Travel Food Itinerary</h1>
+        <div id="all_destinations"></div>
+        <label for="exampleCheck">Send this guide to my email.</label>
+        <a href="{% url 'getFoods:logout' %}">Log Out</a>
     </body>
 </html>

@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-from .models import Users
+from .models import Users, Food
 import logging
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
@@ -10,6 +10,7 @@ from .forms import RegisterForm
 from cities_light.models import Country, City
 from django.http import JsonResponse
 from django.core.serializers import serialize
+import json
 
 
 # Create your views here.
@@ -75,12 +76,16 @@ def logout_view(request):
         pass
     return render(request, "getFoods/login.html", {'message' : "Logged out."})
 
+
+#SECTION FOR PLAN_TRIP.HTML
+
 def plan_trip(request):
     user = Users.objects.get(username = request.session.get('my_username'))
     
     #if new country submitted, add
     if request.method == "POST":
-        new_dest = City.objects.get(name = request.POST['add-city'])
+        #check for both city and country name in case of duplicate city names
+        new_dest = City.objects.get(name = request.POST['add-city'], country__name = request.POST['add-country'])
         #don't need to check if new_dest already in user.destination, django doesn't allow
         user.destinations.add(new_dest)
 
@@ -89,9 +94,6 @@ def plan_trip(request):
         'countries' : Country.objects.all(),
         'cities' : City.objects.all(),
         })
-
-def itinerary(request):
-    return HttpResponse("Hello, world!")
 
 def delete(request, id):
     #this view used to delete a destination from user.destinations
@@ -108,4 +110,41 @@ def get_cities(request, country):
     json_object = serialize("json", query_results, fields=['name']) 
     return HttpResponse(json_object, content_type="application/json")
 
+    
+    #logger.info("----- JSON: %s", json_object)
+    
 
+
+#SECTION FOR ITINERARY.HTML
+
+def itinerary(request):
+    user = Users.objects.get(username = request.session.get('my_username'))
+    return render(request, "getFoods/itinerary.html", {
+        'user' : user,
+        })
+
+def get_top_foods(request):
+    user = Users.objects.get(username = request.session.get('my_username'))
+    all_dest = []
+    for city in user.destinations.all():
+        city_food = []
+        logger.info("----- city: %s", city)
+        country = Country.objects.get(name = city.country.name)
+        logger.info("----- country: %s", country)
+        top_foods = Food.objects.filter(country_id = country.id)
+        logger.info("----- 3Foods: %s", top_foods)
+    
+        for curr_food in top_foods:
+            curr_food = {
+                "city_name" : city.name,
+                "city_id" : city.id,
+                "food_name" : curr_food.name,
+                "food_descr" : curr_food.descr,
+            }
+            city_food.append(curr_food)
+    
+        all_dest.append(city_food)
+    
+    json_object = json.dumps(all_dest, indent=4)
+    logger.info("----- JSON: %s", json_object)
+    return JsonResponse(json_object, content_type="application/json")

@@ -14,9 +14,17 @@ from cities_light.models import Country, City
 
 class Users(models.Model):
     username = models.CharField(max_length=100)
-    destinations = models.ManyToManyField('cities_light.City', null=True, blank=True)
+    destinations = models.ManyToManyField(City, null=True, blank=True)
 
     def __str__(self):
         return f"{self.username}"
+
+class Food(models.Model):
+    country = models.ForeignKey(Country, on_delete=models.SET_NULL, null=True)
+    name = models.CharField(max_length=100)
+    descr = models.CharField(max_length=1000)
+
+    def __str__(self):
+        return f"{self.name}"
 
 

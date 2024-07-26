@@ -11,6 +11,7 @@ urlpatterns = [
     path("plan_trip", views.plan_trip, name="plan_trip"),
     path("itinerary", views.itinerary, name="itinerary"),
     path("register", views.register, name="register"),
-    path('delete/<int:id>', views.delete, name='delete'),
-    path('get_cities/<str:country>', views.get_cities, name='get_cities'),
-]
+    path("delete/<int:id>", views.delete, name='delete'),
+    path("get_cities/<str:country>", views.get_cities, name='get_cities'),
+    path("get_top_foods", views.get_top_foods, name='get_top_foods'),
+    ]
