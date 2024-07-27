@@ -125,27 +125,29 @@ def itinerary(request):
 
 def get_top_foods(request):
     user = Users.objects.get(username = request.session.get('my_username'))
+    #https://javaee.github.io/tutorial/jsonp001.html
+    #outer layer is a list so we can treat json as list later
     all_dest = []
     for city in user.destinations.all():
-        city_food = []
-        logger.info("----- city: %s", city)
+        city_all_food = []
         country = Country.objects.get(name = city.country.name)
-        logger.info("----- country: %s", country)
         top_foods = Food.objects.filter(country_id = country.id)
-        logger.info("----- 3Foods: %s", top_foods)
     
         for curr_food in top_foods:
-            curr_food = {
+            curr_food_dict = {
                 "city_name" : city.name,
                 "city_id" : city.id,
                 "food_name" : curr_food.name,
                 "food_descr" : curr_food.descr,
             }
-            city_food.append(curr_food)
+            city_all_food.append(curr_food_dict)
+            #city_all_food[curr_food.name] = curr_food_dict
     
-        all_dest.append(city_food)
+        all_dest.append(city_all_food)
+        #all_dest[city.name] = city_all_food
+        
+    json_object = json.dumps(all_dest, indent=5)
+    #since all_dest already serialized by json.dumps, don't need to return JsonResponse
+    return HttpResponse(json_object, content_type="application/json")
     
-    json_object = json.dumps(all_dest, indent=4)
-    logger.info("----- JSON: %s", json_object)
-    return JsonResponse(json_object, content_type="application/json")
-    
+    #logger.info("----- JSON: %s", json_object)

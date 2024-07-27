@@ -4,8 +4,30 @@
         <title>World Food Tour!</title>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-                src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&loading=async&libraries=maps,marker&v=beta"
-                fetch(`/getFoods/get_top_foods`)
+                console.log("------------start")
+                //src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&loading=async&libraries=maps,marker&v=beta"
+                fetch('/getFoods/get_top_foods')
+                .then((response) => {
+                    return response.json();
+                })
+                .then(data => {
+                    innerHtml = ""
+                    for (let i = 0; i < data.length; i++) {
+                        cityObject = data[i];
+                        console.log("-----printing city object:" + cityObject[0]['food_name'])
+                        innerHtml += "<div id='city'>" + cityObject[0]["city_name"];
+                        
+                        //iterate over every food of the city
+                        for (const food of cityObject) {
+                            //do the map stuff here so we can use the name of resto below
+                            innerHtml += "<div id='oneFood'>" + food['food_name'] + "<br>" + food['food_descr'] + "<br>" + "Try" + food['food_name'] + "at" + "NAME OF RESTO" + "<br><br>"
+                        }
+
+
+                        
+                    }
+                    document.querySelector('#all_destinations').innerHTML = innerHtml;
+                })
             });
         </script>
     </head>
@@ -16,3 +38,22 @@
         <a href="{% url 'getFoods:logout' %}">Log Out</a>
     </body>
 </html>
+
+
+<!-- -> Create JSON object for all cities in user's destination with the key values being country, city, food#, food# description. The values are the answer. 
+	-> For each city 
+        -> Append start of div, then append City name to a string
+        -> For each top 5 food of the country from the JSON data
+            -> Append name of the food, then description of the food. Then call Maps API to find best restaurant for that food in the city. Append name to description. Add pin on map. 
+        ->Append completed map of city (with set radius) to string. Append end of div.
+    ->Assign string containing all cities and their foods to innerHTML of itinerary.html 
+ -->
+
+ <!--  console.log("---response:" + JSON.stringify(response));
+ //console.log("---data: " + JSON.stringify(data));
+                    //console.log("---data len: " + data.length);
+                    //iterate over every city's JSON object 
+
+                    // for (const [key, value] of Object.entries(data)) {
+                    //     console.log(key, value);
+                    // }-->
