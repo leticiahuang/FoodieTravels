@@ -1,3 +1,38 @@
+
+Python/Django
+    Lazy-initialization
+    View GET VAN/Poutine
+        if DB NO has data for VAN/Poutine && the DATA is more than a week {
+            fetch from google
+            formate the resultsu
+            write into DB (table(s)) with timestamp
+        }
+        do everything above in views.py
+
+        get data from DB about VAN/Poutine <- and then return to html
+
+
+we are using lazy method. we are making a post request to the google api which will return JSON object. 
+Text search wants this as input
+curl -X POST -d '{
+  "textQuery" : "Spicy Vegetarian Food in Sydney, Australia"
+}' \
+-H 'Content-Type: application/json' -H 'X-Goog-Api-Key: API_KEY' \
+-H 'X-Goog-FieldMask: places.displayName,places.formattedAddress,places.priceLevel' \
+'https://places.googleapis.com/v1/places:searchText'
+
+    Non-lazy
+    Daemon run once a week
+        itarate all possible city
+            searhc CTY/Poutine from google
+            formating results
+            write into DB
+
+    View GET VAN/Poutine
+        get data from DB about VAN/Poutine
+
+
+
 Create each country’s (name has to be same as Country class) JSON object with 5 top foods
 
 

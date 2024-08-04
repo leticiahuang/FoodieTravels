@@ -197,30 +197,9 @@ def get_top_foods(request):
 
     #create and return json object    
     json_object = json.dumps(all_dest, indent=5)
-    #logger.info("----- response to frontend: %s", json_object)
     # #since all_dest already serialized by json.dumps, don't need to return JsonResponse
     return HttpResponse(json_object, content_type="application/json")
-    #return JsonResponse(all_dest)
+    
     
     #logger.info("----- JSON: %s", json_object)
 
-
-# Python/Django
-#     Lazy-initialization
-#     View GET VAN/Poutine
-#         if DB NO has data for VAN/Poutine && the DATA is more than a week {
-#             fetch from google
-#             formate the resultsu
-#             write into DB (table(s)) with timestamp
-#         }
-#         do everything above in views.py
-
-#         get data from DB about VAN/Poutine <- and then return to html
-
-
-# we are using lazy method. we are making a post request to the google api which will return JSON object. 
-
-
-
-
-# to add to dict, #all_dest[city.name] = city_all_food

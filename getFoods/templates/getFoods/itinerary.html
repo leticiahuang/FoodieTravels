@@ -3,40 +3,36 @@
     <head>
         <title>World Food Tour!</title>
         <script>
-            let gMap;
-            async function initMap(data) {
+            async function initMap(cityObject, cityName) {
                 // Use location of random resto as location of city
 
                 const position = {
-                    lat: data[0][0]["resto_latitude"],
-                    lng: data[0][0]["resto_longitude"]
+                    lat: cityObject[0]["resto_latitude"],
+                    lng: cityObject[0]["resto_longitude"]
                 };
                 //@ts-ignore
                 const { Map } = await google.maps.importLibrary("maps");
                 const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
 
                 //`map${cityName}`
-                gMap = new Map(document.getElementById("map"), {
+                gMap = new Map(document.getElementById(cityName + "Map"), {
                     zoom: 4,
                     center: position,
-                    mapId: 'mainMap',
+                    mapId: 'cityName + "Map"',
                 });
 
-                for (let i = 0; i < data.length; i++) {
-                    cityObject = data[i];
-                    for (const food of cityObject) {
-                        console.log("adding marker for: " + food["food_name"]);
-                        const curr_position = {
-                            lat: food["resto_latitude"],
-                            lng: food["resto_longitude"]
-                        };
-                        console.log("long+lat " + food["resto_latitude"] + " | " +food["resto_longitude"]);
-                        const marker = new AdvancedMarkerElement({
-                            map: gMap,
-                            position: curr_position,
-                            title: food["food_name"]
-                        });
-                    }
+                for (const food of cityObject) {
+                    console.log("adding marker for: " + food["food_name"]);
+                    const curr_position = {
+                        lat: food["resto_latitude"],
+                        lng: food["resto_longitude"]
+                    };
+                    console.log("long+lat " + food["resto_latitude"] + " | " +food["resto_longitude"]);
+                    const marker = new AdvancedMarkerElement({
+                        map: gMap,
+                        position: curr_position,
+                        title: food["food_name"]
+                    });
                 }
             }
 
@@ -55,7 +51,8 @@
                     //for every city
                     for (let i = 0; i < data.length; i++) {
                         cityObject = data[i];
-                        innerHtml += "<div id='city'>" + cityObject[0]["city_name"];
+                        cityName = cityObject[0]["city_name"];
+                        innerHtml += "<div id='city'>" + cityName;
                         
                         //iterate over every food of the city
                         for (const food of cityObject) {
@@ -65,28 +62,20 @@
                         
                         //end div for city div
                         innerHtml += "</div>"
+                        innerHtml += "<div id='" + cityName + "Map' style=\"height:400px;width:100%;\"></div>"
+
+                        // Initialize map
+                        initMap(cityObject, cityName);
                     }
                     
-                
-                    //innerHtml += `<div id="map${cityName}"></div>`
-                    // Initialize map
-                    initMap(data);
-
                     document.querySelector('#all-destinations').innerHTML = innerHtml;
-                    document.querySelector('#open-GMaps').innerHTML = "Save maps with all the pins below.";
                 })
             });
         </script>
     </head>
     <body>
-        
-
-
-
         <h1>Your Travel Food Itinerary</h1>
-        <div id="open-GMaps"></div>
         <div id="all-destinations"></div>
-        <div id="map" style="height:400px;width:100%;"></div>
         <label for="example-check">Send this guide to my email.</label>
         <a href="{% url 'getFoods:logout' %}">Log Out</a>
     </body>
