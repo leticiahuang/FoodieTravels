@@ -23,6 +23,10 @@ class Food(models.Model):
     country = models.ForeignKey(Country, on_delete=models.SET_NULL, null=True)
     name = models.CharField(max_length=100)
     descr = models.CharField(max_length=1000)
+    resto_name = models.CharField(max_length=100, null=True)     
+    resto_latitude = models.FloatField(null=True) 
+    resto_longitude = models.FloatField(null=True) 
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return f"{self.name}"

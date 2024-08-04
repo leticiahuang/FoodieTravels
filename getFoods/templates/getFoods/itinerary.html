@@ -3,39 +3,91 @@
     <head>
         <title>World Food Tour!</title>
         <script>
+            let gMap;
+            async function initMap(data) {
+                // Use location of random resto as location of city
+
+                const position = {
+                    lat: data[0][0]["resto_latitude"],
+                    lng: data[0][0]["resto_longitude"]
+                };
+                //@ts-ignore
+                const { Map } = await google.maps.importLibrary("maps");
+                const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+
+                //`map${cityName}`
+                gMap = new Map(document.getElementById("map"), {
+                    zoom: 4,
+                    center: position,
+                    mapId: 'mainMap',
+                });
+
+                for (let i = 0; i < data.length; i++) {
+                    cityObject = data[i];
+                    for (const food of cityObject) {
+                        console.log("adding marker for: " + food["food_name"]);
+                        const curr_position = {
+                            lat: food["resto_latitude"],
+                            lng: food["resto_longitude"]
+                        };
+                        console.log("long+lat " + food["resto_latitude"] + " | " +food["resto_longitude"]);
+                        const marker = new AdvancedMarkerElement({
+                            map: gMap,
+                            position: curr_position,
+                            title: food["food_name"]
+                        });
+                    }
+                }
+            }
+
+
             document.addEventListener('DOMContentLoaded', function() {
-                console.log("------------start")
-                //src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&loading=async&libraries=maps,marker&v=beta"
                 fetch('/getFoods/get_top_foods')
                 .then((response) => {
                     return response.json();
                 })
                 .then(data => {
+                    (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
+                    ({key: "{{ frontend_api_key }}", v: "weekly"});
+                    
+
                     innerHtml = ""
+                    //for every city
                     for (let i = 0; i < data.length; i++) {
                         cityObject = data[i];
-                        console.log("-----printing city object:" + cityObject[0]['food_name'])
                         innerHtml += "<div id='city'>" + cityObject[0]["city_name"];
                         
                         //iterate over every food of the city
                         for (const food of cityObject) {
                             //do the map stuff here so we can use the name of resto below
-                            innerHtml += "<div id='oneFood'>" + food['food_name'] + "<br>" + food['food_descr'] + "<br>" + "Try" + food['food_name'] + "at" + "NAME OF RESTO" + "<br><br>"
+                            innerHtml += "<div id='one-food'>" + food['food_name'] + "<br>" + food['food_descr'] + "<br>" + "Try " + food['food_name'] + " at " + food['resto_name'] + "</div>" + "<br><br>"; 
                         }
                         
-
-
-                        
+                        //end div for city div
+                        innerHtml += "</div>"
                     }
-                    document.querySelector('#all_destinations').innerHTML = innerHtml;
+                    
+                
+                    //innerHtml += `<div id="map${cityName}"></div>`
+                    // Initialize map
+                    initMap(data);
+
+                    document.querySelector('#all-destinations').innerHTML = innerHtml;
+                    document.querySelector('#open-GMaps').innerHTML = "Save maps with all the pins below.";
                 })
             });
         </script>
     </head>
     <body>
+        
+
+
+
         <h1>Your Travel Food Itinerary</h1>
-        <div id="all_destinations"></div>
-        <label for="exampleCheck">Send this guide to my email.</label>
+        <div id="open-GMaps"></div>
+        <div id="all-destinations"></div>
+        <div id="map" style="height:400px;width:100%;"></div>
+        <label for="example-check">Send this guide to my email.</label>
         <a href="{% url 'getFoods:logout' %}">Log Out</a>
     </body>
 </html>
