@@ -21,14 +21,15 @@ class Users(models.Model):
 
 class Food(models.Model):
     country = models.ForeignKey(Country, on_delete=models.SET_NULL, null=True)
-    name = models.CharField(max_length=100)
-    descr = models.CharField(max_length=1000)
-    resto_name = models.CharField(max_length=100, null=True)     
-    resto_latitude = models.FloatField(null=True) 
-    resto_longitude = models.FloatField(null=True) 
-    updated_at = models.DateTimeField(auto_now=True, null=True)
+    search_name = models.CharField(max_length=100, null=True)
+    display_name = models.CharField(max_length=100, null=True)
+    descr = models.CharField(max_length=1000, null=True)
+    resto_name = models.CharField(max_length=100, null=True, blank=True)     
+    resto_latitude = models.FloatField(null=True, blank=True) 
+    resto_longitude = models.FloatField(null=True, blank=True) 
+    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
 
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.display_name}"
 
 

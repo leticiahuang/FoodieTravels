@@ -160,7 +160,7 @@ def get_top_foods(request):
                     'X-Goog-FieldMask': 'places.displayName,places.userRatingCount,places.location'
                 }
                 gmap_request_data = {
-                    'textQuery': f"best {curr_food} in {city}",
+                    'textQuery': f"best {curr_food.display_name} in {city}",
                     'minRating': 4,
                 }
                 gmap_response = requests.post(gmap_url, headers=gmap_headers, json=gmap_request_data)
@@ -185,7 +185,7 @@ def get_top_foods(request):
             curr_food_dict = {
                 "city_name" : city.name,
                 "city_id" : city.id,
-                "food_name" : curr_food.name,
+                "display_name" : curr_food.display_name,
                 "food_descr" : curr_food.descr,
                 "resto_name" : curr_food.resto_name,
                 "resto_latitude" : curr_food.resto_latitude,

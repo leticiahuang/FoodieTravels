@@ -1,24 +1,21 @@
-<!DOCTYPE html>
-    <html lang="en">
-        <head>
-            <title>Login</title>
-        </head>
-        <body>
-            <h1>Login</h1>
-            {% if message %}
-                <div>{{ message }}</div>
-            {% endif %}
-                <form method="post" action="{% url 'getFoods:login' %}">
-                    {% csrf_token %}
-                    <label for="username">Name:</label>
-                    <input type="text" value="username" name="username"/>
-                    <br>
-                    <label for="password">Password:</label>
-                    <input type="password" value="password" name="password"/>
-                    <br>
-                    <input type="submit" value="Submit">
-            </form>
-            <p>New to this page? Create an account:</p>
-            <a href="{% url 'getFoods:register' %}">Registration</a>
-        </body>
-    </html>
+{% extends "getFoods/base.html" %}
+
+{% block title %}Login{% endblock title %}
+{% block content %}
+<h1>Login</h1>
+{% if message %}
+    <div>{{ message }}</div>
+{% endif %}
+<form method="post" action="{% url 'getFoods:login' %}">
+    {% csrf_token %}
+    <label for="username">Name:</label>
+    <input type="text" name="username"/>
+    <br>
+    <label for="password">Password:</label>
+    <input type="password" name="password"/>
+    <br>
+    <input type="submit" value="Submit">
+</form>
+<p>New to this page? Create an account:</p>
+<a href="{% url 'getFoods:register' %}">Registration</a>
+{% endblock content %}

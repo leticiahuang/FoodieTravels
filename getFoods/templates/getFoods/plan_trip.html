@@ -1,79 +1,79 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <title>World Food Tour!</title>
-        <script>
-            //js for filtering cities suggested based on country selected. only runs when page loaded and country selected
-            document.addEventListener('DOMContentLoaded', function(){
-                document.getElementById("add-country").addEventListener("change", function() {
-                const country = document.querySelector('#add-country').value;
-                fetch(`/getFoods/get_cities/${country}`)
-                .then((response) => response.json())
-                //data is variable, stores result from response.json()
-                .then(data => {
-                    innerHtml = '<option value="">Select city...</option>';
-                    //iterate over every JSON object to filter the city name and add as select value
-                    for (let i = 0; i < data.length; i++) {
-                        let cityObject = data[i];
-                        cityName = cityObject['fields']['name'];
-                        innerHtml += "<option value=" + cityName + ">" + cityName + "</option>";
-                    }
-                    document.querySelector('#add-city').innerHTML = innerHtml;
-                })
-            })
-        });
-        </script>
-    </head>
-    <body>
-        <h1>{{ user.username.capitalize }}'s Food Tour!</h1>
-        <p>How it works: Select the countries you will be travelling to and add them to the list below. Press submit and enjoy a guide for local cuisines to try on your trip!</p>
+{% extends "getFoods/base.html" %}
 
-        <!-- '' means go to same page -->
-        <form method="post" action=''>
-            {% csrf_token %}
-            <label for="add-country">Next Destination:</label>
-            <!-- TODO: understand difference bw name/id -->
+{% block title %}World Food Tour{% endblock title %}
+{% block js %}
+<script>
+    //js for filtering cities suggested based on country selected. only runs when page loaded and country selected
+    document.addEventListener('DOMContentLoaded', function(){
+        document.getElementById("add-country").addEventListener("change", function() {
+        const country = document.querySelector('#add-country').value;
+        fetch(`/getFoods/get_cities/${country}`)
+        .then((response) => response.json())
+        //data is variable, stores result from response.json()
+        .then(data => {
+            innerHtml = '<option value="">Select city...</option>';
+            //iterate over every JSON object to filter the city name and add as select value
+            for (let i = 0; i < data.length; i++) {
+                let cityObject = data[i];
+                cityName = cityObject['fields']['name'];
+                innerHtml += "<option value=" + cityName + ">" + cityName + "</option>";
+            }
+            document.querySelector('#add-city').innerHTML = innerHtml;
+        })
+    })
+});
+</script>
+{% endblock js %}
 
+{% block content %}
+<h1>{{ user.username.capitalize }}'s Food Tour!</h1>
+<p>How it works: Select the countries you will be travelling to and add them to the list below. Press submit and enjoy a guide for local cuisines to try on your trip!</p>
 
-            <!-- select element for country -->
-            <select name="add-country" id="add-country" required>
-                <option value="">Select country...</option>
-                {% for new_country in countries %}
-                    <option value="{{ new_country }}">{{ new_country }}</option>
-                {% endfor %}
-            </select>
-            
-
-            <!-- select element for city -->
-            <select name="add-city" id="add-city" required>
-                <option value="">Select city...</option>
-                <!-- don't need other options, js innerHtml will fill items -->
-            </select>
-            <br>
-            <button type="submit">Add</button>
+<!-- '' means go to same page -->
+<form method="post" action=''>
+    {% csrf_token %}
+    <label for="add-country">Next Destination:</label>
+    <!-- TODO: understand difference bw name/id -->
 
 
-            <!-- list current destinations chosen with option to delete -->
-            <p>Current destinations selected:</p>
-            <ul>
-                {% for destination in user.destinations.all %}
-                    <li>{{ destination.name }}, {{ destination.country.name }} 
-                    <a href="delete/{{destination.id}}">Delete</a>
-                {% endfor %}
-            </ul>
+    <!-- select element for country -->
+    <select name="add-country" id="add-country" required>
+        <option value="">Select country...</option>
+        {% for new_country in countries %}
+            <option value="{{ new_country }}">{{ new_country }}</option>
+        {% endfor %}
+    </select>
+    
+
+    <!-- select element for city -->
+    <select name="add-city" id="add-city" required>
+        <option value="">Select city...</option>
+        <!-- don't need other options, js innerHtml will fill items -->
+    </select>
+    <br>
+    <button type="submit">Add</button>
 
 
-            <!-- email subscription option -->
-            <input type="checkbox">
-            <label for="exampleCheck">I want to receive a copy of this guide in my email.</label>
-            <br>
-        </form>
+    <!-- list current destinations chosen with option to delete -->
+    <p>Current destinations selected:</p>
+    <ul>
+        {% for destination in user.destinations.all %}
+            <li>{{ destination.name }}, {{ destination.country.name }} 
+            <a href="delete/{{destination.id}}">Delete</a>
+        {% endfor %}
+    </ul>
 
-        <!-- submit or logout -->
-        <a href="{% url 'getFoods:itinerary'%}">
-            <button>Get Your Tour</button>
-        </a>
-        <br>
-        <a href="{% url 'getFoods:logout' %}">Log Out</a>
-    </body>
-</html>
+
+    <!-- email subscription option -->
+    <input type="checkbox">
+    <label for="exampleCheck">I want to receive a copy of this guide in my email.</label>
+    <br>
+</form>
+
+<!-- submit or logout -->
+<a href="{% url 'getFoods:itinerary'%}">
+    <button>Get Your Tour</button>
+</a>
+<br>
+<a href="{% url 'getFoods:logout' %}">Log Out</a>
+{% endblock content %}
