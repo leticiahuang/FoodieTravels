@@ -1,4 +1,11 @@
 def getMax(arr, prop):
+    """
+    Used to filter through the Google Maps API results to find resturant
+    with highest rating.
+
+    Returns:
+        Restaurant object with highest rating. 
+    """
     #https://stackoverflow.com/questions/22949597/getting-max-values-in-json-array
     max = None
     restaurant = None

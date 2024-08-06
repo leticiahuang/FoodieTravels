@@ -1,20 +1,21 @@
 {% extends "getFoods/base.html" %}
 
 {% block title %}Food Itinerary{% endblock title %}
+
 {% block js %}
+<!-- This script creates html code for all foods and creates maps -->
 <script>
+    //This function creates maps and adds pins for all restaurants
     async function initMap(cityObject, cityName) {
         // Use location of random resto as location of city
-
         const position = {
             lat: cityObject[0]["resto_latitude"],
             lng: cityObject[0]["resto_longitude"]
         };
-        //@ts-ignore
+
         const { Map } = await google.maps.importLibrary("maps");
         const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
 
-        //`map${cityName}`
         gMap = new Map(document.getElementById(cityName + "Map"), {
             zoom: 12,
             center: position,
@@ -23,11 +24,12 @@
 
         for (const food of cityObject) {
             console.log("adding marker for: " + food["display_name"]);
+
             const curr_position = {
                 lat: food["resto_latitude"],
                 lng: food["resto_longitude"]
             };
-            console.log("long+lat " + food["resto_latitude"] + " | " +food["resto_longitude"]);
+
             const marker = new AdvancedMarkerElement({
                 map: gMap,
                 position: curr_position,
@@ -36,40 +38,40 @@
         }
     }
 
-
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         fetch('/getFoods/get_top_foods')
-        .then((response) => {
-            return response.json();
-        })
-        .then(data => {
-            (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
-            ({key: "{{ frontend_api_key }}", v: "weekly"});
-            
+            .then((response) => {
+                return response.json();
+            })
+            .then(data => {
+                (g => { var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__", m = document, b = window; b = b[c] || (b[c] = {}); var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams, u = () => h || (h = new Promise(async (f, n) => { await (a = m.createElement("script")); e.set("libraries", [...r] + ""); for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]); e.set("callback", c + ".maps." + q); a.src = `https://maps.${c}apis.com/maps/api/js?` + e; d[q] = f; a.onerror = () => h = n(Error(p + " could not load.")); a.nonce = m.querySelector("script[nonce]")?.nonce || ""; m.head.append(a) })); d[l] ? console.warn(p + " only loads once. Ignoring:", g) : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n)) })
+                    ({ key: "{{ frontend_api_key }}", v: "weekly" });
 
-            innerHtml = ""
-            //for every city
-            for (let i = 0; i < data.length; i++) {
-                cityObject = data[i];
-                cityName = cityObject[0]["city_name"];
-                innerHtml += "<div id='city'>" + cityName;
-                
-                //iterate over every food of the city
-                for (const food of cityObject) {
-                    //do the map stuff here so we can use the name of resto below
-                    innerHtml += "<div id='one-food'>" + food['display_name'] + "<br>" + food['food_descr'] + "<br>" + "Try this dish at: " + food['resto_name'] + "</div>" + "<br><br>"; 
+
+                innerHtml = ""
+                //create html code for every city and add map after 5 foods listed
+                for (let i = 0; i < data.length; i++) {
+                    cityObject = data[i];
+                    cityName = cityObject[0]["city_name"];
+                    innerHtml += "<div id='city'>" + cityName;
+
+                    for (const food of cityObject) {
+                        innerHtml += "<div id='one-food'>" + food['display_name']
+                            + "<br>" + food['food_descr'] + "<br>"
+                            + "Try this dish at: " + food['resto_name']
+                            + "</div>" + "<br><br>";
+                    }
+
+                    innerHtml += "</div>" //end div for city's div
+                    innerHtml += "<div id='" + cityName
+                        + "Map' style=\"height:400px;width:100%;\"></div>"
+
+                    // Initialize map
+                    initMap(cityObject, cityName);
                 }
-                
-                //end div for city div
-                innerHtml += "</div>"
-                innerHtml += "<div id='" + cityName + "Map' style=\"height:400px;width:100%;\"></div>"
 
-                // Initialize map
-                initMap(cityObject, cityName);
-            }
-            
-            document.querySelector('#all-destinations').innerHTML = innerHtml;
-        })
+                document.querySelector('#all-destinations').innerHTML = innerHtml;
+            })
     });
 </script>
 {% endblock js %}

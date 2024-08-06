@@ -1,6 +1,6 @@
 from django.urls import path
 
-from . import views
+from . import views, api
 
 app_name = "getFoods"
 
@@ -12,6 +12,6 @@ urlpatterns = [
     path("itinerary", views.itinerary, name="itinerary"),
     path("register", views.register, name="register"),
     path("delete/<int:id>", views.delete, name='delete'),
-    path("get_cities/<str:country>", views.get_cities, name='get_cities'),
-    path("get_top_foods", views.get_top_foods, name='get_top_foods'),
+    path("get_cities/<str:country>", api.get_cities, name='get_cities'),
+    path("get_top_foods", api.get_top_foods, name='get_top_foods'),
     ]

@@ -1,49 +1,50 @@
 {% extends "getFoods/base.html" %}
 
 {% block title %}World Food Tour{% endblock title %}
+
 {% block js %}
+<!-- JS to populate city drop down selector once country selected. -->
 <script>
-    //js for filtering cities suggested based on country selected. only runs when page loaded and country selected
-    document.addEventListener('DOMContentLoaded', function(){
-        document.getElementById("add-country").addEventListener("change", function() {
-        const country = document.querySelector('#add-country').value;
-        fetch(`/getFoods/get_cities/${country}`)
-        .then((response) => response.json())
-        //data is variable, stores result from response.json()
-        .then(data => {
-            innerHtml = '<option value="">Select city...</option>';
-            //iterate over every JSON object to filter the city name and add as select value
-            for (let i = 0; i < data.length; i++) {
-                let cityObject = data[i];
-                cityName = cityObject['fields']['name'];
-                innerHtml += "<option value=" + cityName + ">" + cityName + "</option>";
-            }
-            document.querySelector('#add-city').innerHTML = innerHtml;
+    document.addEventListener('DOMContentLoaded', function () {
+        //only execute when country selected
+        document.getElementById("add-country").addEventListener("change", function () {
+            const country = document.querySelector('#add-country').value;
+            fetch(`/getFoods/get_cities/${country}`)
+                .then((response) => response.json())
+                .then(data => {
+                    innerHtml = '<option value="">Select city...</option>';
+                    //iterate over cities to add add city name as select value
+                    for (let i = 0; i < data.length; i++) {
+                        let cityObject = data[i];
+                        cityName = cityObject['fields']['name'];
+                        innerHtml += "<option value=" + cityName + ">" + cityName
+                            + "</option>";
+                    }
+                    document.querySelector('#add-city').innerHTML = innerHtml;
+                })
         })
-    })
-});
+    });
 </script>
 {% endblock js %}
 
 {% block content %}
 <h1>{{ user.username.capitalize }}'s Food Tour!</h1>
-<p>How it works: Select the countries you will be travelling to and add them to the list below. Press submit and enjoy a guide for local cuisines to try on your trip!</p>
+<p>How it works: Select the countries you will be travelling to and add them
+    to the list below. Press submit and enjoy a guide for local cuisines to
+    try on your trip!</p>
 
 <!-- '' means go to same page -->
 <form method="post" action=''>
     {% csrf_token %}
     <label for="add-country">Next Destination:</label>
-    <!-- TODO: understand difference bw name/id -->
-
 
     <!-- select element for country -->
     <select name="add-country" id="add-country" required>
         <option value="">Select country...</option>
         {% for new_country in countries %}
-            <option value="{{ new_country }}">{{ new_country }}</option>
+        <option value="{{ new_country }}">{{ new_country }}</option>
         {% endfor %}
     </select>
-    
 
     <!-- select element for city -->
     <select name="add-city" id="add-city" required>
@@ -53,20 +54,20 @@
     <br>
     <button type="submit">Add</button>
 
-
     <!-- list current destinations chosen with option to delete -->
     <p>Current destinations selected:</p>
     <ul>
         {% for destination in user.destinations.all %}
-            <li>{{ destination.name }}, {{ destination.country.name }} 
+        <li>{{ destination.name }}, {{ destination.country.name }}
             <a href="delete/{{destination.id}}">Delete</a>
-        {% endfor %}
+            {% endfor %}
     </ul>
-
 
     <!-- email subscription option -->
     <input type="checkbox">
-    <label for="exampleCheck">I want to receive a copy of this guide in my email.</label>
+    <label for="exampleCheck">
+        I want to receive a copy of this guide in my email.
+    </label>
     <br>
 </form>
 

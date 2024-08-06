@@ -26,7 +26,7 @@ class RegisterForm(UserCreationForm):
         email = self.cleaned_data['email'].lower()  
         existing_email = User.objects.filter(email=email)  
         if existing_email.count():  
-            raise ValidationError(" Email Already Exist")  
+            raise ValidationError("Email Already Exist")  
         return email  
   
     def clean_password2(self):  
@@ -34,7 +34,7 @@ class RegisterForm(UserCreationForm):
         password2 = self.cleaned_data['password2']  
   
         if password1 and password2 and password1 != password2:  
-            raise ValidationError("Password don't match")  
+            raise ValidationError("Passwords don't match")  
         return password2  
   
     def save(self):  
@@ -47,4 +47,3 @@ class RegisterForm(UserCreationForm):
 
 
 
-    
