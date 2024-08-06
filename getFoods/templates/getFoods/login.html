@@ -3,20 +3,30 @@
 {% block title %}Login{% endblock title %}
 
 {% block content %}
-<h1>Login</h1>
-{% if message %}
-    <div>{{ message }}</div>
-{% endif %}
-<form method="post" action="{% url 'getFoods:login' %}">
-    {% csrf_token %}
-    <label for="username">Name:</label>
-    <input type="text" name="username"/>
-    <br>
-    <label for="password">Password:</label>
-    <input type="password" name="password"/>
-    <br>
-    <input type="submit" value="Submit">
-</form>
-<p>New to this page? Create an account:</p>
-<a href="{% url 'getFoods:register' %}">Registration</a>
+<div class="loginRegister-container">
+    <h1>Eat The World</h1>
+
+    <div class="loginRegister-text">
+        {% if message %}
+            <p>{{ message }}</p>
+        {% endif %}
+        
+        <div class="side-lines">
+            <span id="side-line-text">Login</span>
+        </div>
+
+        <form method="post" action="{% url 'getFoods:login' %}">
+            {% csrf_token %}
+            <input type="text" name="username" id="username" placeholder="  Username"/>
+            <br>
+            <input type="password" name="password" id="password" placeholder="  Password"/>
+            <br>
+            <input id="submit-btn" type="submit" value="Log In">
+        </form>
+        <div id="login-to-register">
+            <p>New here?</p>
+            <a href="{% url 'getFoods:register' %}" id="login-reg-link">Sign Up</a>
+        </div>
+    </div>
+</div>
 {% endblock content %}

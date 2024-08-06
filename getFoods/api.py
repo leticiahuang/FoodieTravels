@@ -86,8 +86,8 @@ def get_top_foods(request):
                 #if api call success, filter for best resto and save to DB
                 if gmap_response.status_code == 200:
                     gmap_response = gmap_response.json()
-                    best_resto = getMax(gmap_response['places'], 
-                        'userRatingCount')
+                    logging.info("----- gmap_response: %s", gmap_response)
+                    best_resto = getMax(gmap_response['places'], 'userRatingCount')
                     resto = Restaurant(
                         city = city,
                         food_name = curr_food,

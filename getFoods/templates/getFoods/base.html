@@ -1,10 +1,12 @@
+{% load static %}
 <!DOCTYPE html>
     <html lang="en">
         <head>
-            <title>{% block title %}{% endblock %}</title>
-            {% block js %}{% endblock %}
+            <title>{% block title %}{% endblock title %}</title>
+            <link rel="stylesheet" href="{% static 'css/style.css' %}">
+            {% block js %}{% endblock js %}
         </head>
         <body>
-            {% block content %}{% endblock %}
+            {% block content %}{% endblock content %}
         </body>
     </html>
