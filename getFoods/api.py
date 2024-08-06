@@ -1,5 +1,5 @@
 from cities_light.models import Country, City
-from .models import Users, Food
+from .models import Users, Food, Restaurant
 from django.core.serializers import serialize
 from datetime import datetime, timedelta
 from .utils.functions import getMax, getGoogleApiKeyBackend, getGoogleApiKeyFrontend
@@ -62,8 +62,10 @@ def get_top_foods(request):
         
         #create dictionary for every food in the city
         for curr_food in top_foods:
-            #call GMAP api to get data if data DNE or expired
-            if (curr_food.resto_name is None):  # TODO or utc.localize(curr_food.updated_at) < past
+            if Restaurant.objects.filter(city = city, food_name = curr_food).exists(): #TODO and if exiration date is not past past
+                resto = Restaurant.objects.get(city = city, food_name = curr_food)
+            else:
+                #call GMAP api to get data if data DNE or expired
                 gmap_url = "https://places.googleapis.com/v1/places:searchText"
                 gmap_backend_key = getGoogleApiKeyBackend()
                 gmap_headers = {
@@ -74,7 +76,7 @@ def get_top_foods(request):
                 }   
 
                 gmap_request_data = {
-                    'textQuery': f"best {curr_food.display_name} in {city}",
+                    'textQuery': f"best {curr_food.search_name} in {city}",
                     'minRating': 4,
                 }
 
@@ -86,11 +88,15 @@ def get_top_foods(request):
                     gmap_response = gmap_response.json()
                     best_resto = getMax(gmap_response['places'], 
                         'userRatingCount')
-                    curr_food.resto_name = best_resto['displayName']['text']
-                    curr_food.resto_latitude = best_resto['location']['latitude']
-                    curr_food.resto_longitude = best_resto['location']['longitude'] 
-                    curr_food.updated_at = datetime.now()
-                    curr_food.save() 
+                    resto = Restaurant(
+                        city = city,
+                        food_name = curr_food,
+                        resto_name = best_resto['displayName']['text'],
+                        resto_latitude = best_resto['location']['latitude'],
+                        resto_longitude = best_resto['location']['longitude'], 
+                        updated_at = datetime.now()
+                    )
+                    resto.save()
                 else:
                     print(f"Internal error, try again.") 
 
@@ -100,9 +106,9 @@ def get_top_foods(request):
                 "city_id": city.id,
                 "display_name": curr_food.display_name,
                 "food_descr": curr_food.descr,
-                "resto_name": curr_food.resto_name,
-                "resto_latitude": curr_food.resto_latitude,
-                "resto_longitude": curr_food.resto_longitude
+                "resto_name": resto.resto_name,
+                "resto_latitude": resto.resto_latitude,
+                "resto_longitude": resto.resto_longitude
             }
             city_all_food.append(curr_food_dict)
 
