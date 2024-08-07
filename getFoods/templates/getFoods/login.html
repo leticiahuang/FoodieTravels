@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="loginRegister-container">
-    <h1>Eat The World</h1>
+    <h1 style="margin: 1rem 0;">Eat The World</h1>
 
     <div class="login-text">
         {% if message %}
@@ -17,9 +17,9 @@
 
         <form method="post" action="{% url 'getFoods:login' %}">
             {% csrf_token %}
-            <input type="text" name="username" id="username" placeholder="  Username"/>
+            <input type="text" name="username" id="username" placeholder=" Username"/>
             <br>
-            <input type="password" name="password" id="password" placeholder="  Password"/>
+            <input type="password" name="password" id="password" placeholder=" Password"/>
             <br>
             <input id="submit-btn" type="submit" value="Log In">
         </form>

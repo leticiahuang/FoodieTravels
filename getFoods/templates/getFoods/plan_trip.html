@@ -28,54 +28,51 @@
 {% endblock js %}
 
 {% block content %}
-<h1>{{ user.username.capitalize }}'s Food Tour!</h1>
-<p>How it works: Select the countries you will be travelling to and add them
-    to the list below. Press submit and enjoy a guide for local cuisines to
-    try on your trip!</p>
+<div class="plan-trip-page-container">
+    <div id="plan-trip-green">
+        <h1 style="margin: 3rem 0;">{{ user.username.capitalize }}'s Food Tour!</h1>
+        <p>Select the cities you will be travelling to and enjoy a guide of local cuisines to try on your trip!</p>
 
-<!-- '' means go to same page -->
-<form method="post" action=''>
-    {% csrf_token %}
-    <label for="add-country">Next Destination:</label>
+        <!-- '' means go to same page -->
+        <form method="post" action='' id="plan-trip-form">
+            {% csrf_token %}
+            <!-- select element for country -->
+            <select name="add-country" id="add-country" required>
+                <option value="">Country</option>
+                {% for new_country in countries %}
+                <option value="{{ new_country }}">{{ new_country }}</option>
+                {% endfor %}
+            </select>
 
-    <!-- select element for country -->
-    <select name="add-country" id="add-country" required>
-        <option value="">Select country...</option>
-        {% for new_country in countries %}
-        <option value="{{ new_country }}">{{ new_country }}</option>
-        {% endfor %}
-    </select>
+            <!-- select element for city -->
+            <select name="add-city" id="add-city" required>
+                <option value="">City</option>
+                <!-- don't need other options, js innerHtml will fill items -->
+            </select>
+            <button type="submit" id="add-btn">Add</button>
+        </form>
+    </div>
 
-    <!-- select element for city -->
-    <select name="add-city" id="add-city" required>
-        <option value="">Select city...</option>
-        <!-- don't need other options, js innerHtml will fill items -->
-    </select>
-    <br>
-    <button type="submit">Add</button>
+    <div id="plan-trip-white">
+        <!-- list current destinations chosen with option to delete -->
+        <div id="plan-trip-white-text">
+            <!-- TODO deal with when city name has a space -->
+            <p style="text-align: center;">Current destinations selected:</p>
+            <ul id="selected-dest">
+                {% for destination in user.destinations.all %}
+                <li>{{ destination.name }}, {{ destination.country.name }}
+                    <a href="delete/{{destination.id}}" id="delete-btn">Delete</a>
+                    {% endfor %}
+            </ul>
 
-    <!-- list current destinations chosen with option to delete -->
-    <p>Current destinations selected:</p>
-    <ul>
-        {% for destination in user.destinations.all %}
-        <li>{{ destination.name }}, {{ destination.country.name }}
-            <a href="delete/{{destination.id}}">Delete</a>
-            {% endfor %}
-    </ul>
-    <p>Please note smaller cities and countries where Google Maps is not the dominating web map may not retrieve data properly and may result in error.</p>
-
-    <!-- email subscription option -->
-    <input type="checkbox">
-    <label for="exampleCheck">
-        I want to receive a copy of this guide in my email.
-    </label>
-    <br>
-</form>
-
-<!-- submit or logout -->
-<a href="{% url 'getFoods:itinerary'%}">
-    <button>Get Your Tour</button>
-</a>
-<br>
-<a href="{% url 'getFoods:logout' %}">Log Out</a>
+            <!-- submit or logout -->
+            <div id="get-tour-container">
+                <a href="{% url 'getFoods:itinerary'%}">
+                    <button id="submit-btn">Get Your Tour</button>
+                </a>
+                <a href="{% url 'getFoods:logout' %}" id="login-reg-link">Log Out</a>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock content %}

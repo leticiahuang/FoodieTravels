@@ -3,7 +3,6 @@
 * {
     margin: 0; 
     padding: 0; 
-    background-color: white;
     font-family: "Inter", sans-serif;
 }
 
@@ -15,6 +14,8 @@ html, body {
 h1 {
     font-size: 300%;
 }
+
+
 
 
 
@@ -51,17 +52,18 @@ h1 {
     font-size: 12px;
     color: grey;
     background: white;
-    padding: 0 10px;
+    padding-left: 8px;
 }
 
 /* for login user input */
 input {
-    border: 1px solid white; 
+    border: 1px solid rgb(233, 243, 233); 
     background-color: rgb(233, 243, 233); 
     border-radius: 1.1em;
-    width: 350px;
+    width: 334px;
     height: 37px;
     margin: 5px 0;
+    padding: 0 8px;
 }
 
 ::placeholder {
@@ -69,11 +71,11 @@ input {
 }
 
 #submit-btn {
-    border: 1px solid rgb(51, 175, 51); 
-    background-color: rgb(51, 175, 51); 
+    border: 1px solid rgb(72, 159, 72); 
+    background-color: rgb(72, 159, 72);
     color: white;
     border-radius: 2em;
-    margin-top: 1rem;
+    margin: 2rem 0 0.5rem;
     padding: 0 5px;
     width: 120px;
     height: 42px;
@@ -81,7 +83,7 @@ input {
 
 /* design for "New here?" */
 #login-to-register {
-    margin: 0.5rem 0 0.3rem;
+    margin: 0 0 0.3rem;
     font-size: 12px;
     color: rgb(123, 123, 123);
 }
@@ -93,7 +95,6 @@ input {
     font-weight: 800;
     font-size: 12px;
 }
-
 
 
 
@@ -122,3 +123,92 @@ label {
 
 
 
+
+
+/* -------REGISTRATION PAGE -----------------------------------*/
+
+.plan-trip-page-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+}
+
+#plan-trip-green {
+    background: rgb(72, 159, 72);
+    height: 300px;
+}
+
+#plan-trip-green h1, #plan-trip-green p {
+    color: white;
+    text-align: center;
+}
+
+#plan-trip-white {
+    background: rgb(245, 245, 245);
+    flex: 1;
+}
+
+#plan-trip-white-text {
+    width: 632px;
+    margin: 3rem auto;
+    padding: 20px 50px;
+    border: 1px solid white; 
+    border-radius: 1.1em;
+    background-color: white; 
+    color: grey;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+#plan-trip-form {
+    background-color: white;
+    width: 700px;
+    margin: 0.7rem auto;
+    padding: 0.7rem 1rem;
+    border-radius: 1rem;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+select {
+    border: 1px solid rgb(233, 243, 233); 
+    background-color: rgb(233, 243, 233); 
+    border-radius: 1.1em;
+    width: 317px;
+    height: 30px;
+    color: grey;
+}
+
+#add-btn {
+    width: 50px;
+    height: 30px;
+    margin-left: 5px;
+    border: 1px solid rgb(183, 219, 183); 
+    background-color: rgb(183, 219, 183); 
+    border-radius: 1.1em;
+}
+
+#selected-dest {
+  margin: 3rem;
+}
+
+#delete-btn {
+    font-size: 12px;
+    color: rgb(106, 106, 106);
+    width: 15px;
+    height: 13px;
+    border: 1px solid (224, 224, 224); 
+    background-color: rgb(224, 224, 224); 
+    border-radius: 0.5em;
+    text-decoration: none;
+    padding: 1.5px 3px;
+}
+
+#selected-dest li{
+    margin: 5px 0;
+}
+
+#get-tour-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
