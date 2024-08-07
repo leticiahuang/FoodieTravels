@@ -4,21 +4,19 @@
 
 {% block content %}
 <div class="loginRegister-container">
-    <h1>Register</h1>
-    <div class="loginRegister-text">
+    <h1 style="margin-bottom: 2rem;">Sign Up</h1>
+    <div class="register-text">
         {% if message %}
             <div>{{ message }}</div>
         {% endif %}
-        <form method="post">
+        <form id="register-form" method="post">
             {% csrf_token %}
             <table>
                 {{ RegisterForm.as_table}}
-                <tr>
-                    <td></td>
-                    <td><input type="submit" name="submit" value="Register"/></td>
-                </tr>
             </table>
+            <input type="submit" name="submit" id="submit-btn" value="Register"/>
         </form>
+        <a href="{% url 'getFoods:login' %}" id="login-reg-link">Back to Login</a>
     </div>
 </div>
 {% endblock content %}
