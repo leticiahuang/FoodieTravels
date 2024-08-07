@@ -70,7 +70,7 @@ input {
     color: rgb(146, 146, 146);
 }
 
-#submit-btn {
+.submit-btn {
     border: 1px solid rgb(72, 159, 72); 
     background-color: rgb(72, 159, 72);
     color: white;
@@ -89,7 +89,7 @@ input {
 }
 
 /* design for link to go from login to registration page */
-#login-reg-link {
+.login-reg-link {
     text-decoration: none;
     color: green;
     font-weight: 800;
@@ -211,4 +211,82 @@ select {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+
+
+
+
+/* -------ITINERARY PAGE -----------------------------------*/
+
+.itinerary-container{
+    display: flex;
+    flex-direction: column;
+}
+
+.itinerary-container h1 {
+    color:green; 
+    text-align:center;
+    margin: 7rem 0 8rem;
+    font-size: 80px;
+}
+
+.city {
+    display: flex;
+    justify-content: space-evenly;
+    margin-bottom: 5rem;
+}
+
+.city-text {
+    width: 50%;
+    padding: 2rem 2.5rem 1rem;
+    background: rgb(245, 245, 245);
+    border-radius: 0.5rem;
+    color: grey;
+}
+
+.city-map {
+    width: 550px;
+    height: 950px;
+    margin: auto 0;
+}
+
+.city-name-title {
+    font-size: 25px;
+    font-weight: 500;
+    padding-left: 0.5rem;
+    color: rgb(97, 97, 97);
+}
+
+.one-food {
+    margin: 1rem 0;
+    background: white;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    border-radius: 0.5rem;
+    padding: 1.5rem 2rem;
+}
+
+.food-display-name {
+    font-size: 17px;
+    font-weight: 530;
+    margin-bottom: 8px;
+    color: rgb(121, 168, 121);
+}
+
+.food-descr {
+    margin-bottom: 0.5rem;
+}
+
+.try-food-at {
+    font-size: 15px;
+    font-weight: 650;
+}
+
+#logout-link {
+    text-decoration: none;
+    color: green;
+    font-weight: 700;
+    font-size: 17px;
+    margin-bottom: 3rem;
+    text-align: center;
 }

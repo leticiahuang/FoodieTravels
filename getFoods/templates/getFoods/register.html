@@ -14,9 +14,9 @@
             <table>
                 {{ RegisterForm.as_table}}
             </table>
-            <input type="submit" name="submit" id="submit-btn" value="Register"/>
+            <input type="submit" name="submit" class="submit-btn" value="Register"/>
         </form>
-        <a href="{% url 'getFoods:login' %}" id="login-reg-link">Back to Login</a>
+        <a href="{% url 'getFoods:login' %}" class="login-reg-link">Back to Login</a>
     </div>
 </div>
 {% endblock content %}

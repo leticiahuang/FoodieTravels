@@ -53,21 +53,25 @@
                 for (let i = 0; i < data.length; i++) {
                     cityObject = data[i];
                     cityName = cityObject[0]["city_name"];
-                    innerHtml += "<div id='city'>" + cityName;
+                    innerHtml += "<div class='city'>" + "<div class='city-text'>" + "<h3 class=\"city-name-title\">" + cityName + "</h3>";
 
                     for (const food of cityObject) {
-                        innerHtml += "<div id='one-food'>" + food['display_name']
-                            + "<br>" + food['food_descr'] + "<br>"
-                            + "Try this dish at: " + food['resto_name']
-                            + "</div>" + "<br><br>";
+                        innerHtml += 
+                            "<div class='one-food'>" 
+                            + "<div class=\"food-display-name\">" + food['display_name'] + "</div>"
+                            + "<div class=\"food-descr\">" + food['food_descr'] + "</div>"
+                            + "Try this dish at: " 
+                            + "<span class=\"try-food-at\">" + food['resto_name'] + "</span>"
+                            + "</div>";
                     }
 
-                    innerHtml += "</div>" //end div for city's div
-                    innerHtml += "<div id='" + cityName
-                        + "Map' style=\"height:400px;width:100%;\"></div>"
+                    innerHtml += "</div>" + "<div id='" + cityName
+                        + "Map' class=\"city-map\"></div>"
 
                     // Initialize map
                     initMap(cityObject, cityName);
+
+                    innerHtml += "</div>" //end div for city's div
                 }
 
                 document.querySelector('#all-destinations').innerHTML = innerHtml;
@@ -77,7 +81,9 @@
 {% endblock js %}
 
 {% block content %}
-<h1>Your Food Itinerary</h1>
-<div id="all-destinations">Loading...</div>
-<a href="{% url 'getFoods:logout' %}">Log Out</a>
+<div class="itinerary-container">
+    <h1>Your Food Itinerary</h1>
+    <div id="all-destinations">Loading...</div>
+    <a href="{% url 'getFoods:logout' %}" id="logout-link">Log Out &#128075</a>
+</div>
 {% endblock content %}

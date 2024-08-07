@@ -4,11 +4,11 @@
 
 {% block content %}
 <div class="loginRegister-container">
-    <h1 style="margin: 1rem 0;">Eat The World</h1>
+    <h1 style="margin: 1rem 0; color:green;">Eat The World</h1>
 
     <div class="login-text">
         {% if message %}
-            <p>{{ message }}</p>
+            <p style="color:grey;">{{ message }}</p>
         {% endif %}
         
         <div class="side-lines">
@@ -21,10 +21,10 @@
             <br>
             <input type="password" name="password" id="password" placeholder=" Password"/>
             <br>
-            <input id="submit-btn" type="submit" value="Log In">
+            <input class="submit-btn" type="submit" value="Log In">
         </form>
         <p id="login-to-register">New here?</p>
-        <a href="{% url 'getFoods:register' %}" id="login-reg-link">Sign Up</a>
+        <a href="{% url 'getFoods:register' %}" class="login-reg-link">Sign Up</a>
     </div>
 </div>
 {% endblock content %}
