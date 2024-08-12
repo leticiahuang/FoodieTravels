@@ -20,11 +20,12 @@
             zoom: 12,
             center: position,
             mapId: 'cityName + "Map"',
+            mapTypeControl: false,
+            streetViewControl: false
+
         });
 
         for (const food of cityObject) {
-            console.log("adding marker for: " + food["display_name"]);
-
             const curr_position = {
                 lat: food["resto_latitude"],
                 lng: food["resto_longitude"]
@@ -82,6 +83,7 @@
 
 {% block content %}
 <div class="itinerary-container">
+    <a href="{% url 'getFoods:plan_trip' %}" id="go-back">← Go back</a>
     <h1>Your Food Itinerary</h1>
     <div id="all-destinations">Loading...</div>
     <a href="{% url 'getFoods:logout' %}" id="logout-link">Log Out &#128075</a>

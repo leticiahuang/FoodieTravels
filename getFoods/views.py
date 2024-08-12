@@ -94,9 +94,7 @@ def plan_trip(request):
     user = Users.objects.get(username = request.session.get('my_username'))
 
     if request.method == "POST":
-        #check for both city and country name in case of duplicate city names
-        new_dest = City.objects.get(name = request.POST['add-city'], 
-            country__name = request.POST['add-country'])
+        new_dest = City.objects.get(id = request.POST['add-city'])
         #don't check if new_dest exists in user.destination, django checks
         user.destinations.add(new_dest)
 

@@ -12,13 +12,14 @@
             fetch(`/getFoods/get_cities/${country}`)
                 .then((response) => response.json())
                 .then(data => {
-                    innerHtml = '<option value="">Select city...</option>';
+                    innerHtml = '<option value="">City</option>';
                     //iterate over cities to add add city name as select value
                     for (let i = 0; i < data.length; i++) {
                         let cityObject = data[i];
                         cityName = cityObject['fields']['name'];
-                        innerHtml += "<option value=" + cityName + ">" + cityName
-                            + "</option>";
+                        //pk field gives city id
+                        cityId = cityObject['pk'];
+                        innerHtml += "<option value=\"" + cityId + "\">" + cityName + "</option>"
                     }
                     document.querySelector('#add-city').innerHTML = innerHtml;
                 })
@@ -38,7 +39,8 @@
             {% csrf_token %}
             <!-- select element for country -->
             <select name="add-country" id="add-country" required>
-                <option value="">Country</option>
+                <!-- this empty option tag is for "Country" display, the rest will be filled from js -->
+                <option value="">Country</option> 
                 {% for new_country in countries %}
                 <option value="{{ new_country }}">{{ new_country }}</option>
                 {% endfor %}
@@ -56,7 +58,6 @@
     <div id="plan-trip-white">
         <!-- list current destinations chosen with option to delete -->
         <div id="plan-trip-white-text">
-            <!-- TODO deal with when city name has a space -->
             <p style="text-align: center;">Current destinations selected:</p>
             <ul id="selected-dest">
                 {% for destination in user.destinations.all %}

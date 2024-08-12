@@ -198,9 +198,10 @@ select {
     height: 13px;
     border: 1px solid (224, 224, 224); 
     background-color: rgb(224, 224, 224); 
-    border-radius: 0.5em;
+    border-radius: 2rem;
     text-decoration: none;
-    padding: 1.5px 3px;
+    padding: 1.5px 8px;
+    margin-left: 0.7rem;
 }
 
 #selected-dest li{
@@ -224,10 +225,19 @@ select {
     flex-direction: column;
 }
 
+#go-back {
+    text-align: left;
+    text-decoration: none;
+    color: green;
+    font-weight: 700;
+    font-size: 14px;
+    margin: 2rem;
+}
+
 .itinerary-container h1 {
     color:green; 
     text-align:center;
-    margin: 7rem 0 8rem;
+    margin: 4rem 0 7rem;
     font-size: 80px;
 }
 
@@ -270,7 +280,7 @@ select {
     font-size: 17px;
     font-weight: 530;
     margin-bottom: 8px;
-    color: rgb(121, 168, 121);
+    color: rgb(83, 148, 83);
 }
 
 .food-descr {
@@ -290,3 +300,4 @@ select {
     margin-bottom: 3rem;
     text-align: center;
 }
+
