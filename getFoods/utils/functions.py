@@ -1,3 +1,11 @@
+import environ
+import os
+from pathlib import Path
+
+env = environ.Env()
+BASE_DIR = Path(__file__).resolve().parent.parent
+environ.Env.read_env(os.path.join(BASE_DIR, 'settings', '.env'))
+
 def getMax(arr, prop):
     """
     Used to filter through the Google Maps API results to find resturant
@@ -22,17 +30,12 @@ GLOBAL_GOOGLE_API_BACK_KEY = ""
 def getGoogleApiKeyBackend():
     global GLOBAL_GOOGLE_API_BACK_KEY
     if GLOBAL_GOOGLE_API_BACK_KEY == "":
-        file = open("getFoods/secret/google_map_backend_api.key", "r")
-        GLOBAL_GOOGLE_API_BACK_KEY = file.read()
-        GLOBAL_GOOGLE_API_BACK_KEY = GLOBAL_GOOGLE_API_BACK_KEY.strip()
-        file.close() 
+        GLOBAL_GOOGLE_API_BACK_KEY = env('GMAP_BACKEND_KEY')
     return GLOBAL_GOOGLE_API_BACK_KEY
 
 def getGoogleApiKeyFrontend():
     global GLOBAL_GOOGLE_API_FRONT_KEY
     if GLOBAL_GOOGLE_API_FRONT_KEY == "":
-        file = open("getFoods/secret/google_map_frontend_api.key", "r")
-        GLOBAL_GOOGLE_API_FRONT_KEY = file.read()
-        GLOBAL_GOOGLE_API_FRONT_KEY = GLOBAL_GOOGLE_API_FRONT_KEY.strip()
-        file.close() 
+        if GLOBAL_GOOGLE_API_FRONT_KEY == "":
+            GLOBAL_GOOGLE_API_FRONT_KEY = env('GMAP_FRONTEND_KEY') 
     return GLOBAL_GOOGLE_API_FRONT_KEY

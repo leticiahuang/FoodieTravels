@@ -1,6 +1,6 @@
 {% extends "getFoods/base.html" %}
 
-{% block title %}Food Itinerary{% endblock title %}
+{% block title %}Travel Eatinerary{% endblock title %}
 
 {% block js %}
 <!-- This script creates html code for all foods and creates maps -->
@@ -84,7 +84,7 @@
 {% block content %}
 <div class="itinerary-container">
     <a href="{% url 'getFoods:plan_trip' %}" id="go-back">← Go back</a>
-    <h1>Your Food Itinerary</h1>
+    <h1>Travel Eatinerary</h1>
     <div id="all-destinations">Loading...</div>
     <a href="{% url 'getFoods:logout' %}" id="logout-link">Log Out &#128075</a>
 </div>
