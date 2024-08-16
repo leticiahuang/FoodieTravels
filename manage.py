@@ -6,7 +6,7 @@ import sys
 import environ
 import logging
 
-BASE_DIR = Path(__file__).resolve()
+BASE_DIR = Path(__file__).resolve().parent
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 def main():

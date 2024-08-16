@@ -16,7 +16,7 @@ import environ
 
 env = environ.Env()
 BASE_DIR = Path(__file__).resolve().parent
-environ.Env.read_env(os.path.join(BASE_DIR, 'settings', '.env'))
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -92,7 +92,7 @@ WSGI_APPLICATION = 'TopFoods.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': DB_BASE_DIR / 'db.sqlite3',
     }
 }
 
