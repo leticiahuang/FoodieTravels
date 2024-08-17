@@ -31,13 +31,15 @@ SECRET_KEY = env('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = [ '44.243.39.112' ]
+ALLOWED_HOSTS = [ 'localhost' ]
 
 SECURE_SSL_REDIRECT = True
 
 SESSION_COOKIE_SECURE = True
 
 CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_DOMAIN = '44.243.39.112'
+CSRF_TRUSTED_ORIGINS = [ 'http://44.243.39.112' ]
 
 SECURE_BROWSER_XSS_FILTER = True
 
@@ -132,10 +134,12 @@ SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
+STATIC_ROOT = "/food/FoodieTravels/static"
+
 STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [
-    BASE_DIR / 'static'
+    BASE_DIR / 'getFoods/static'
 ]
 
 # Default primary key field type
