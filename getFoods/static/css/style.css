@@ -52,7 +52,7 @@ h1 {
     font-size: 12px;
     color: grey;
     background: white;
-    padding-left: 8px;
+    padding: 8px;
 }
 
 /* for login user input */
@@ -71,8 +71,8 @@ input {
 }
 
 .submit-btn {
-    border: 1px solid rgb(72, 159, 72); 
-    background-color: rgb(72, 159, 72);
+    border: 1px solid rgb(60, 153, 60);
+    background-color: rgb(60, 153, 60);
     color: white;
     border-radius: 2em;
     margin: 2rem 0 0.5rem;
@@ -238,7 +238,7 @@ select {
     color:green; 
     text-align:center;
     margin: 4rem 0 7rem;
-    font-size: 80px;
+    font-size: 55px;
 }
 
 .city {
@@ -290,6 +290,10 @@ select {
 .try-food-at {
     font-size: 15px;
     font-weight: 650;
+}
+
+#all-destinations {
+    margin-bottom: 5rem;
 }
 
 #logout-link {
