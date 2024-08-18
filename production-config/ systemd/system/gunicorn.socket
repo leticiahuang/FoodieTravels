@@ -1,0 +1,11 @@
+[Unit]
+#describes socket
+Description=gunicorn socket
+
+[Socket]
+#define socket location
+ListenStream=/run/gunicorn.sock
+
+[Install]
+#make sure socket is created at right time
+WantedBy=sockets.target

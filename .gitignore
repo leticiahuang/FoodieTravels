@@ -2,3 +2,4 @@
 getFoods/secret/
 getFoods/secret/**
 .env
+db.sqlite3

@@ -15,7 +15,8 @@ import os
 import environ
 
 env = environ.Env()
-BASE_DIR = Path(__file__).resolve().parent.parent
+#BASE_DIR is path for top most folder, TopFoods
+BASE_DIR = Path(__file__).resolve().parent.parent 
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -31,15 +32,16 @@ SECRET_KEY = env('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = [ 'localhost' ]
+ALLOWED_HOSTS = [ 'www.traveleatinerary.com', 'localhost' ]
 
-SECURE_SSL_REDIRECT = True
+SECURE_SSL_REDIRECT = False
 
 SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_DOMAIN = 'www.traveleatinerary.com'
 
 CSRF_COOKIE_SECURE = True
-CSRF_COOKIE_DOMAIN = '44.243.39.112'
-CSRF_TRUSTED_ORIGINS = [ 'http://44.243.39.112' ]
+CSRF_COOKIE_DOMAIN = 'www.traveleatinerary.com'
+CSRF_TRUSTED_ORIGINS = [ 'https://www.traveleatinerary.com' ]
 
 SECURE_BROWSER_XSS_FILTER = True
 

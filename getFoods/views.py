@@ -94,9 +94,12 @@ def plan_trip(request):
     user = Users.objects.get(username = request.session.get('my_username'))
 
     if request.method == "POST":
-        new_dest = City.objects.get(id = request.POST['add-city'])
-        #don't check if new_dest exists in user.destination, django checks
-        user.destinations.add(new_dest)
+        requested_city = request.POST['add-city']
+        #check for only contains digits (city id), against sql insert hacking
+        if requested_city.is_numeric():
+            new_dest = City.objects.get(id = requested_city)
+            #don't check if new_dest exists in user.destination, django checks
+            user.destinations.add(new_dest)
 
     return render(request, "getFoods/plan_trip.html", {
         'user': user,

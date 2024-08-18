@@ -1,0 +1,22 @@
+#from https://www.digitalocean.com/community/tutorials/how-to-set-up-django-with-postgres-nginx-and-gunicorn-on-ubuntu#step-9-testing-socket-activation
+
+[Unit]
+# tell the init system to only start this after the networking target has been reached
+Description=gunicorn daemon
+Requires=gunicorn.socket
+After=network.target
+
+[Service]
+#Specify the user and group that you want to process to run under. You will give your regular user account ownership of the process since it owns all of the relevant files. You’ll give group ownership to the www-data group so that Nginx can communicate easily with Gunicorn.
+User=django-topfood
+Group=www-data
+WorkingDirectory=/food/FoodieTravels
+ExecStart=/food/FoodieTravels/.venv/bin/gunicorn \
+          --access-logfile - \
+          --workers 3 \
+          --bind unix:/run/gunicorn.sock \
+          TopFoods.wsgi:application
+
+[Install]
+#tell systemd what to link this service to if you enable it to start at boot. You want this service to start when the regular multi-user system is up and running
+WantedBy=multi-user.target
