@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 from .utils.functions import getMax, getGoogleApiKeyBackend, getGoogleApiKeyFrontend
 from django.http import JsonResponse
 from django.http import HttpResponse, HttpResponseRedirect
+from django.contrib import messages
 import pytz
 import requests
 import logging
@@ -61,20 +62,7 @@ def get_top_foods(request):
         
         #create dictionary for every food in the city
         for curr_food in top_foods:
-            do_reload = True
-
-            if Restaurant.objects.filter(city = city, food_name = curr_food).exists():
-                record_time = Restaurant.objects.get(city = city, food_name = curr_food).updated_at
-                if timedelta(days=60) > now - record_time:
-                    do_reload = False
-            
-            if not do_reload:
-                resto = Restaurant.objects.get(city = city, food_name = curr_food)
-
-            else:
-                #call GMAP api to get find best restaurant if data DNE or expired
-                resto = call_gmap(curr_food, city)
-                resto.save()
+            resto = get_resto(curr_food, city, now)
 
             #create dict to turn into json response
             curr_food_dict = {
@@ -96,13 +84,44 @@ def get_top_foods(request):
 
 
 
+
+def get_resto(curr_food, city, now):
+    """
+    A function that returns restaurant from DB. If resto hasn't been initialized
+     or data is old, call API. Used by get_resto().
+    
+    Returns:
+        restaurant object from DB
+    """
+
+    #do_reload: if results are expired and need to recall api for resturant db
+    do_reload = True 
+
+    if Restaurant.objects.filter(city = city, food_name = curr_food).exists():
+        record_time = Restaurant.objects.get(city = city, food_name = curr_food).updated_at
+        if timedelta(days=60) > now - record_time:
+            do_reload = False
+    
+    if not do_reload:
+        resto = Restaurant.objects.get(city = city, food_name = curr_food)
+
+    else:
+        #call GMAP api to get find best restaurant if data DNE or expired
+        resto = call_gmap(curr_food, city)
+        resto.save()
+
+    return resto
+
+
+
+
 def call_gmap(curr_food, city):
     """
     A function that calls Google Maps Text Search API and filters results
-    for best restaurant.
+    for best restaurant. Used by get_resto().
     
     Returns:
-        restaurant object
+        restaurant object from GMaps API
     """
 
     gmap_url = "https://places.googleapis.com/v1/places:searchText"
@@ -124,17 +143,32 @@ def call_gmap(curr_food, city):
 
     #if api call success, filter for best resto and save to DB
     if gmap_response.status_code == 200:
-        gmap_response = gmap_response.json()
-        best_resto = getMax(gmap_response['places'], 'userRatingCount')
-        resto = Restaurant(
+        gmap_json = gmap_response.json()
+        if 'places' not in gmap_json:
+            resto = Restaurant(
             city = city,
             food_name = curr_food,
-            resto_name = best_resto['displayName']['text'],
-            resto_latitude = best_resto['location']['latitude'],
-            resto_longitude = best_resto['location']['longitude'], 
+            resto_name = f"Unfortunately we couldn't find any restaurants in {city.name}",
+            resto_latitude = 90,
+            resto_longitude = 0, 
             updated_at = datetime.now()
         )
+            # messages.info('Sorry, { city } is too small, please remove.')
+            # return JsonResponse(["msg", "....", 1], safe=False);
+        else :
+            best_resto = getMax(gmap_json['places'], 'userRatingCount')
+            resto = Restaurant(
+                city = city,
+                food_name = curr_food,
+                resto_name = best_resto['displayName']['text'],
+                resto_latitude = best_resto['location']['latitude'],
+                resto_longitude = best_resto['location']['longitude'], 
+                updated_at = datetime.now()
+            )
         return resto
 
     else:
-        print(f"Internal error, try again.") 
+        return render("Internal error, try again.")
+    
+
+

@@ -3,8 +3,8 @@ import os
 from pathlib import Path
 
 env = environ.Env()
-BASE_DIR = Path(__file__).resolve().parent.parent
-environ.Env.read_env(os.path.join(BASE_DIR, 'settings', '.env'))
+#BASE_DIR = Path(__file__).resolve().parent.parent
+#environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 def getMax(arr, prop):
     """
@@ -31,11 +31,12 @@ def getGoogleApiKeyBackend():
     global GLOBAL_GOOGLE_API_BACK_KEY
     if GLOBAL_GOOGLE_API_BACK_KEY == "":
         GLOBAL_GOOGLE_API_BACK_KEY = env('GMAP_BACKEND_KEY')
+    print("BKKEY ", GLOBAL_GOOGLE_API_BACK_KEY)
     return GLOBAL_GOOGLE_API_BACK_KEY
 
 def getGoogleApiKeyFrontend():
     global GLOBAL_GOOGLE_API_FRONT_KEY
     if GLOBAL_GOOGLE_API_FRONT_KEY == "":
-        if GLOBAL_GOOGLE_API_FRONT_KEY == "":
-            GLOBAL_GOOGLE_API_FRONT_KEY = env('GMAP_FRONTEND_KEY') 
+        GLOBAL_GOOGLE_API_FRONT_KEY = env('GMAP_FRONTEND_KEY') 
+    print("FEKEY ", GLOBAL_GOOGLE_API_BACK_KEY)
     return GLOBAL_GOOGLE_API_FRONT_KEY

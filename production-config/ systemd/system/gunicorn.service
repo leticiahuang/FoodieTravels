@@ -1,4 +1,5 @@
-#from https://www.digitalocean.com/community/tutorials/how-to-set-up-django-with-postgres-nginx-and-gunicorn-on-ubuntu#step-9-testing-socket-activation
+# from https://www.digitalocean.com/community/tutorials/how-to-set-up-django-with-postgres-nginx-and-gunicorn-on-ubuntu#step-9-testing-socket-activation
+# everything in production-config file is just backup for production.py on ec2 instace
 
 [Unit]
 # tell the init system to only start this after the networking target has been reached

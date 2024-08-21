@@ -19,6 +19,7 @@ def index(request):
 
 
 
+# --------------------------- SECTION FOR LOGIN/OUT ---------------------------------------
 
 def register(request):
     """
@@ -83,7 +84,9 @@ def logout_view(request):
 
 
 
-#SECTION FOR PLAN_TRIP.HTML
+
+
+#---------------------------- SECTION FOR PLAN_TRIP.HTML -----------------------------------------
 
 def plan_trip(request):
     """
@@ -121,9 +124,11 @@ def delete(request, id):
     return HttpResponseRedirect(reverse('getFoods:plan_trip'))
 
     
+
+
     
 
-#SECTION FOR ITINERARY.HTML
+#--------------------------- SECTION FOR ITINERARY.HTML ------------------------------------------
 
 def itinerary(request):
     """
