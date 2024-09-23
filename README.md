@@ -1,8 +1,6 @@
 # FoodieTravels
 
 #### Summary of Project
-[https://www.geeksforgeeks.org/eye-blink-detection-with-opencv-python-and-dlib/](https://www.geeksforgeeks.org/eye-blink-detection-with-opencv-python-and-dlib/)
-
 This is a website that allows travellers to quickly research local cuisines from every travel destination. First, users must create an account. Then, submit all travel destinations to recieve a tailored guide to local dishes in all cities you will travel to. Each city is accompanies by a Google Maps with top-rated restaurants pinned. 
 
 #### Background

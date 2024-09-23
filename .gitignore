@@ -1,5 +1,6 @@
 **/__pycache__
-getFoods/secret/
+getFoods/secret/ #don't think we need this anymore, got rid of secret
 getFoods/secret/**
+getFoods/templates/getFoods/APIplan.md
 .env
 db.sqlite3
