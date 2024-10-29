@@ -125,7 +125,7 @@ label {
 
 
 
-/* -------REGISTRATION PAGE -----------------------------------*/
+/* -------PLAN TRIP PAGE -----------------------------------*/
 
 .plan-trip-page-container {
     display: flex;
@@ -136,7 +136,7 @@ label {
 
 #plan-trip-green {
     background: rgb(72, 159, 72);
-    height: 300px;
+    height: 350px;
 }
 
 #plan-trip-green h1, #plan-trip-green p {
