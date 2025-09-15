@@ -130,7 +130,7 @@ SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
 STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [
-    BASE_DIR / 'static'
+    BASE_DIR / 'getFoods/static'
 ]
 
 # Default primary key field type

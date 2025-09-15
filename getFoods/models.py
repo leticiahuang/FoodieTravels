@@ -4,7 +4,7 @@ from cities_light.models import Country, City
 
 class Users(models.Model):
     username = models.CharField(max_length=100)
-    destinations = models.ManyToManyField(City, null=True, blank=True)
+    destinations = models.ManyToManyField(City, blank=True)
 
     def __str__(self):
         return f"{self.username}"

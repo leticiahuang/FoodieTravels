@@ -98,12 +98,13 @@ def get_resto(curr_food, city, now):
     do_reload = True 
 
     if Restaurant.objects.filter(city = city, food_name = curr_food).exists():
-        record_time = Restaurant.objects.get(city = city, food_name = curr_food).updated_at
-        if timedelta(days=60) > now - record_time:
-            do_reload = False
-    
-    if not do_reload:
-        resto = Restaurant.objects.get(city = city, food_name = curr_food)
+        resto = Restaurant.objects.get(city=city, food_name=curr_food)
+        record_time = resto.updated_at
+        if now - record_time > timedelta(days=60):
+            # Delete old resto and get new one if expired
+            resto.delete()
+            resto = call_gmap(curr_food, city)
+            resto.save()
 
     else:
         #call GMAP api to get find best restaurant if data DNE or expired
